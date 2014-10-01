@@ -1,0 +1,4 @@
+Virtualization-type=[虚拟化类型：kvm 或者 qemu]
+Edit-apt-sources=[选择框对应的修改Ubuntu14.04软件安装源：Yes 或者 No]
+New-apt-sources=[输入框对应的：新的安装源域名或者IP地址]
+Email-address=[邮箱地址]

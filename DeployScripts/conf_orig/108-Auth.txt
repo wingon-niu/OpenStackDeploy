@@ -1,0 +1,13 @@
+Mysql-root-password=root123
+Mysql-keystone-username=keystone123
+Mysql-keystone-password=keystonepass123
+Mysql-nova-username=nova123
+Mysql-nova-password=novapass123
+Mysql-glance-username=glance123
+Mysql-glance-password=glancepass123
+Mysql-cinder-username=cinder123
+Mysql-cinder-password=cinderpass123
+Mysql-neutron-username=neutron123
+Mysql-neutron-password=neutronpass123
+Keystone-admin-password=adminpass123
+Keystone-service-password=servicepass123

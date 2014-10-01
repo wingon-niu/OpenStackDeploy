@@ -1,0 +1,6 @@
+Admin-net-nic-name=eth0
+Ext-net-nic-name=eth1
+Admin-net-vip=172.16.1.90
+Ext-net-vip=192.168.1.90
+Network-api-class=nova-network
+Network-type=FlatDHCPManager

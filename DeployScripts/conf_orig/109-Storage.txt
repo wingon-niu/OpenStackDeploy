@@ -1,0 +1,2 @@
+Cinder-volumes-file-name=/root/OpenStack-Install-HA/my-cinder-volumes-file
+Cinder-volumes-file-size=2G

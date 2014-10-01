@@ -1,0 +1,2 @@
+Cinder-volumes-file-name=[文件名称]
+Cinder-volumes-file-size=[文件大小]

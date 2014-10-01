@@ -1,0 +1,4 @@
+Virtualization-type=qemu
+Edit-apt-sources=Yes
+New-apt-sources=192.168.11.63
+Email-address=y-g.niu@163.com
