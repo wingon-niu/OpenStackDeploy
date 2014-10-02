@@ -1,16 +1,21 @@
 #!/bin/bash
 
-NUM=5
+source ./env.sh
 
-echo ""
-echo "controller-node-install-part-2"
-echo ""
-echo "Sleep $NUM seconds, then exit."
+echo "Begin time of controller-node-part-2-install:"
+date
 
-I=1
-for ((I=1; I<=$NUM; I++)); do
-    printf "%12s\n" $I
-    sleep 1
-done
+#Create these databases
+./database-create-db.sh
+
+#Install RabbitMQ Part 2
+./message-queue-install-part-2.sh
+
+#------ Here ------
+
+#
+
+echo "End time of controller-node-part-2-install:"
+date
 
 exit 0

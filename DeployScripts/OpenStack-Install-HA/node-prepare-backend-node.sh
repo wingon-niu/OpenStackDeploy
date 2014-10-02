@@ -1,16 +1,22 @@
 #!/bin/bash
 
-NUM=5
+source ./env.sh
 
-echo ""
-echo "prepare-backend-node"
-echo ""
-echo "Sleep $NUM seconds, then exit."
+#if [ -f /root/node-prepared ]; then
+#    echo "Node had been prepared."
+#    exit 0
+#fi
 
-I=1
-for ((I=1; I<=$NUM; I++)); do
-    printf "%12s\n" $I
-    sleep 1
-done
+#Node init conf and common install
+./node-1-server-init-conf.sh
+./node-2-use-local-sources.sh
+./node-3-preparing-openstack.sh
+./node-4-common-install.sh
+./node-5-time-follow-front-node.sh
 
+#touch /root/node-prepared
+
+echo "Node prepared OK."
+
+#Restart the Server
 shutdown -r now
