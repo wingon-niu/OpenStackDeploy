@@ -47,9 +47,11 @@ screen   -S niu -U -X screen   -U -t $IP $CMD_PATH/run-on-node.expect $IP contro
 $CMD_PATH/check-screen-ended.sh
 
 #Sync /var/lib/rabbitmq/.erlang.cookie
-rsync -va root@${G_CONTROLLER_NODE_IPS[0]}:/var/lib/rabbitmq/.erlang.cookie $CMD_PATH/.erlang.cookie
-rsync -va $CMD_PATH/.erlang.cookie root@${G_CONTROLLER_NODE_IPS[1]}:/var/lib/rabbitmq/.erlang.cookie
-rsync -va $CMD_PATH/.erlang.cookie root@${G_CONTROLLER_NODE_IPS[2]}:/var/lib/rabbitmq/.erlang.cookie
+ssh root@${G_CONTROLLER_NODE_IPS[1]} "rm -f /var/lib/rabbitmq/.erlang.cookie"
+ssh root@${G_CONTROLLER_NODE_IPS[2]} "rm -f /var/lib/rabbitmq/.erlang.cookie"
+rsync -va root@${G_CONTROLLER_NODE_IPS[0]}:/var/lib/rabbitmq/.erlang.cookie $CMD_PATH/
+rsync -va $CMD_PATH/.erlang.cookie root@${G_CONTROLLER_NODE_IPS[1]}:/var/lib/rabbitmq/
+rsync -va $CMD_PATH/.erlang.cookie root@${G_CONTROLLER_NODE_IPS[2]}:/var/lib/rabbitmq/
 
 #Process controller-node-install-part-2 on controller node 1
 echo $CTL_INSTALL_PART_2_ON_CTL_1
