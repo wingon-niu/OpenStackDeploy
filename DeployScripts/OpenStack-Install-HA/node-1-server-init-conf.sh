@@ -19,8 +19,20 @@ echo $HOST_NAME > $CONF_FILE
 
 CONF_FILE=/etc/hosts
 ./backup-file.sh $CONF_FILE
-sed -i "/^127.0.0.1/c 127.0.0.1    localhost"                      $CONF_FILE
-sed -i "/^127.0.1.1/c 127.0.1.1    $HOST_NAME_FQDN    $HOST_NAME"  $CONF_FILE
+COUNT=$(cat $CONF_FILE | grep '^127.0.0.1' | wc -l)
+if [ $COUNT -ne 0 ]; then
+    sed -i "/^127.0.0.1/c 127.0.0.1    localhost"                      $CONF_FILE
+else
+    echo ""                       >> $CONF_FILE
+    echo "127.0.0.1    localhost" >> $CONF_FILE
+fi
+COUNT=$(cat $CONF_FILE | grep '^127.0.1.1' | wc -l)
+if [ $COUNT -ne 0 ]; then
+    sed -i "/^127.0.1.1/c 127.0.1.1    $HOST_NAME_FQDN    $HOST_NAME"  $CONF_FILE
+else
+    echo ""                                                         >> $CONF_FILE
+    echo "127.0.1.1    $HOST_NAME_FQDN    $HOST_NAME"               >> $CONF_FILE
+fi
 
 CONF_FILE=/etc/resolvconf/resolv.conf.d/head
 ./backup-file.sh $CONF_FILE
