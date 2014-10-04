@@ -20,7 +20,9 @@ MY_NIC_NAME=$($CMD_PATH/get-conf-data.sh ./interface.txt INTERFACE_NAME)
 for s in $(cat $DST_PATH/$PREFIX_SERVERS-Servers.txt); do
     MY_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $s $MY_NIC_NAME)
     rsync -va ./OpenStack-Install-HA              $MY_IP:/root/
-    rsync -va $DST_PATH/$PREFIX_SERVERS-$s-env.sh $MY_IP:/root/OpenStack-Install-HA/env.sh
+    ssh   $MY_IP "rm -f /root/OpenStack-Install-HA/env.sh"
+    rsync -va $DST_PATH/$PREFIX_SERVERS-$s-env.sh $MY_IP:/root/OpenStack-Install-HA/
+    ssh   $MY_IP "mv -f /root/OpenStack-Install-HA/$PREFIX_SERVERS-$s-env.sh /root/OpenStack-Install-HA/env.sh"
 done
 
 for MY_IP in $(cat $CONF_DEPLOY_DIR/Controller-Nodes-IPs.txt); do
