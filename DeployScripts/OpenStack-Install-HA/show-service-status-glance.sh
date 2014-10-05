@@ -7,7 +7,7 @@ source ./env.sh
 source ./openrc
 
 #Show Service Status
-glance image-list
+#---#glance image-list
 
 service glance-api status
 service glance-registry status

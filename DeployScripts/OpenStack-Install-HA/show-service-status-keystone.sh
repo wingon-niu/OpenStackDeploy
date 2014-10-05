@@ -9,11 +9,11 @@ source ./env.sh
 source ./openrc
 
 #To test Keystone, we use a simple CLI command
-keystone user-list
-keystone role-list
-keystone tenant-list
-keystone service-list
-keystone endpoint-list
+#---#keystone user-list
+#---#keystone role-list
+#---#keystone tenant-list
+#---#keystone service-list
+#---#keystone endpoint-list
 
 service keystone status
 
