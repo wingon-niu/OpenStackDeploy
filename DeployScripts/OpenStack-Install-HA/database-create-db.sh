@@ -27,7 +27,7 @@ if [ $DB_NODE_TYPE = 'FirstNode' ]; then
     echo "flush privileges;"                                                                             >> $tmp_file
     echo ""                                                                                              >> $tmp_file
 
-    mysql -uroot -p$MYSQL_ROOT_PASSWORD < $tmp_file
+    mysql -uroot -p$MYSQL_ROOT_PASSWORD -f < $tmp_file
     rm $tmp_file
 else
     echo "DB_NODE_TYPE === FollowNode"
