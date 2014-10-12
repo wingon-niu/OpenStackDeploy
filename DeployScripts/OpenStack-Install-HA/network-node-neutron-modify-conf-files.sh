@@ -65,17 +65,29 @@ CONF_FILE=/etc/neutron/plugins/ml2/ml2_conf.ini
 if [ $TENANT_NETWORK_TYPES = 'gre' ]; then
     echo "TENANT_NETWORK_TYPES = gre"
 
-    ./set-config.py $CONF_FILE ml2           type_drivers          gre
-    ./set-config.py $CONF_FILE ml2           tenant_network_types  gre
-    ./set-config.py $CONF_FILE ml2           mechanism_drivers     $MECHANISM_DRIVERS
-    ./set-config.py $CONF_FILE ml2_type_gre  tunnel_id_ranges      1:10000
-    ./set-config.py $CONF_FILE ovs           local_ip              $INSTANCE_TUNNELS_INTERFACE_IP_ADDRESS
-    ./set-config.py $CONF_FILE ovs           tunnel_type           gre
-    ./set-config.py $CONF_FILE ovs           enable_tunneling      True
+    ./set-config.py $CONF_FILE ml2             type_drivers          gre
+    ./set-config.py $CONF_FILE ml2             tenant_network_types  gre
+    ./set-config.py $CONF_FILE ml2             mechanism_drivers     $MECHANISM_DRIVERS
+    ./set-config.py $CONF_FILE ml2_type_gre    tunnel_id_ranges      1:10000
+
+    ./set-config.py $CONF_FILE ovs             local_ip              $INSTANCE_TUNNELS_INTERFACE_IP_ADDRESS
+    ./set-config.py $CONF_FILE ovs             tunnel_type           gre
+    ./set-config.py $CONF_FILE ovs             enable_tunneling      True
 
     #
 elif [ $TENANT_NETWORK_TYPES = 'vxlan' ]; then
     echo "TENANT_NETWORK_TYPES = vxlan"
+
+    ./set-config.py $CONF_FILE ml2             type_drivers          vxlan
+    ./set-config.py $CONF_FILE ml2             tenant_network_types  vxlan
+    ./set-config.py $CONF_FILE ml2             mechanism_drivers     $MECHANISM_DRIVERS
+    ./set-config.py $CONF_FILE ml2_type_vxlan  vni_ranges            1000:5000
+#   ./set-config.py $CONF_FILE ml2_type_vxlan  vxlan_group           239.1.1.1
+
+    ./set-config.py $CONF_FILE ovs             local_ip              $INSTANCE_TUNNELS_INTERFACE_IP_ADDRESS
+    ./set-config.py $CONF_FILE ovs             tunnel_type           vxlan
+    ./set-config.py $CONF_FILE ovs             enable_tunneling      True
+    ./set-config.py $CONF_FILE ovs             vxlan_udp_port        4789
 
     #
 else
