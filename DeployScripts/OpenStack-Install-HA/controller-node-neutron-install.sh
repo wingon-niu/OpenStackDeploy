@@ -16,6 +16,11 @@ apt-get install -y neutron-server neutron-plugin-ml2
 #Modify conf files
 ./controller-node-neutron-modify-conf-files.sh
 
+#Accept udp port 4789 when use vxlan
+if [ $TENANT_NETWORK_TYPES = 'vxlan' ]; then
+    ./udp-port-4789-accept.sh
+fi
+
 #Restart Neutron
 ./restart-service-controller-node-neutron.sh
 

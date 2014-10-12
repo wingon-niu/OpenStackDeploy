@@ -24,11 +24,17 @@ apt-get -y install neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l
 #Modify conf files
 ./network-node-neutron-modify-conf-files.sh
 
+#Accept udp port 4789 when use vxlan
+if [ $TENANT_NETWORK_TYPES = 'vxlan' ]; then
+    ./udp-port-4789-accept.sh
+fi
+
 #To configure the Open vSwitch (OVS) service
 service openvswitch-switch restart
 ovs-vsctl add-br br-int
 ovs-vsctl add-br br-ex
 ./network-node-set-ip-for-br-ex.sh
+sleep 5
 ovs-vsctl add-port br-ex $EXTERNAL_NETWORK_INTERFACE_NAME;shutdown -r now;
 
 ### Depending on your network interface driver, you may need to disable
