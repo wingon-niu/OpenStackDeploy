@@ -18,7 +18,7 @@ screen -dmS niu -U -t sleeping $CMD_PATH/sleep-x-seconds.sh 10
 $CMD_PATH/check-screen-started.sh
 
 for IP in $(cat $CONF_DEPLOY_DIR/Front-Nodes-IPs.txt); do
-    screen   -S niu -U -X screen   -U -t $IP $CMD_PATH/run-on-node.expect $IP haproxy-keepalived-node-install.sh $RUN_DATE-front-nodes-install-$IP.log
+    screen   -S niu -U -X screen   -U -t $IP $CMD_PATH/run-on-node.expect $IP front-node-install.sh $RUN_DATE-front-nodes-install-$IP.log
 done
 
 $CMD_PATH/check-screen-ended.sh
