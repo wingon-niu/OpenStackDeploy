@@ -19,7 +19,7 @@ echo "net.ipv4.conf.default.rp_filter=0"   >> $CONF_FILE
 sysctl -p
 
 #To install the Networking components
-apt-get -y install neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent
+apt-get -y install neutron-common neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent
 
 #Modify conf files
 ./network-node-neutron-modify-conf-files.sh

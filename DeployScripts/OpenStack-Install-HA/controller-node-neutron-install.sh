@@ -11,7 +11,7 @@ if [ $FIRST_NEUTRON_NODE = 'Yes' ]; then
 fi
 
 #To install the Networking components
-apt-get install -y neutron-server neutron-plugin-ml2
+apt-get -y install neutron-common neutron-server neutron-plugin-ml2
 
 #Modify conf files
 ./controller-node-neutron-modify-conf-files.sh
