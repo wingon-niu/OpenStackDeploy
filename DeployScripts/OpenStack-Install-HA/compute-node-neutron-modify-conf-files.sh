@@ -44,6 +44,9 @@ if [ $TENANT_NETWORK_TYPES = 'gre' ]; then
     ./set-config.py $CONF_FILE ovs             tunnel_type           gre
     ./set-config.py $CONF_FILE ovs             enable_tunneling      True
 
+    ./set-config.py $CONF_FILE agent           polling_interval      2
+    ./set-config.py $CONF_FILE agent           tunnel_types          gre
+
     #
 elif [ $TENANT_NETWORK_TYPES = 'vxlan' ]; then
     echo "TENANT_NETWORK_TYPES = vxlan"
@@ -58,6 +61,9 @@ elif [ $TENANT_NETWORK_TYPES = 'vxlan' ]; then
     ./set-config.py $CONF_FILE ovs             tunnel_type           vxlan
     ./set-config.py $CONF_FILE ovs             enable_tunneling      True
     ./set-config.py $CONF_FILE ovs             vxlan_udp_port        4789
+
+    ./set-config.py $CONF_FILE agent           polling_interval      2
+    ./set-config.py $CONF_FILE agent           tunnel_types          vxlan
 
     #
 else
