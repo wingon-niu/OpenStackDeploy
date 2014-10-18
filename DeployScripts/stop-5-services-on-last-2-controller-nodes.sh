@@ -13,8 +13,9 @@ fi
 echo $STR_STOP_SOME_SERVICES
 for IP in $(tail -n 2 $CONF_DEPLOY_DIR/Controller-Nodes-IPs.txt); do
     echo $IP
-    ssh root@$IP "cd /root/OpenStack-Install-HA;./stop-service-glance.sh;./stop-service-cinder.sh;./stop-service-horizon.sh;"
-    ssh root@$IP "service nova-consoleauth stop;service nova-novncproxy stop;"
+    ssh root@$IP "cd /root/OpenStack-Install-HA;./stop-service-glance.sh;./stop-service-cinder.sh;"
+#   ssh root@$IP "cd /root/OpenStack-Install-HA;./stop-service-glance.sh;./stop-service-cinder.sh;./stop-service-horizon.sh;"
+#   ssh root@$IP "service nova-consoleauth stop;service nova-novncproxy stop;"
 done
 
 exit 0
