@@ -226,6 +226,18 @@ echo "    server  controller1 $CONTROLLER_NODE_01_INTERNAL_IP:6080 check inter 6
 echo "    server  controller2 $CONTROLLER_NODE_02_INTERNAL_IP:6080 check inter 60000 rise 1 fall 1" >> $CONF_FILE
 echo "    server  controller3 $CONTROLLER_NODE_03_INTERNAL_IP:6080 check inter 60000 rise 1 fall 1" >> $CONF_FILE
 echo ""                                                                                             >> $CONF_FILE
+echo "listen memcached_cluster"                                                                     >> $CONF_FILE
+echo "    bind    0.0.0.0:11211"                                                                    >> $CONF_FILE
+echo "    balance source"                                                                           >> $CONF_FILE
+#echo"    mode    http"                                                                             >> $CONF_FILE
+#echo"    option  httplog"                                                                          >> $CONF_FILE
+#echo"    option  tcpka"                                                                            >> $CONF_FILE
+#echo"    option  httpchk"                                                                          >> $CONF_FILE
+echo "    default-server inter 2s downinter 5s rise 2 fall 5 slowstart 60s maxconn 10000 maxqueue 512 weight 100" >> $CONF_FILE
+echo "    server  controller1 $CONTROLLER_NODE_01_INTERNAL_IP:11211 check"                          >> $CONF_FILE
+echo "    server  controller2 $CONTROLLER_NODE_02_INTERNAL_IP:11211 check backup"                   >> $CONF_FILE
+echo "    server  controller3 $CONTROLLER_NODE_03_INTERNAL_IP:11211 check backup"                   >> $CONF_FILE
+echo ""                                                                                             >> $CONF_FILE
 
 CONF_FILE=/etc/sysctl.conf
 ./backup-file.sh $CONF_FILE

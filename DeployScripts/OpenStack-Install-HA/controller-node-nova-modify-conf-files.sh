@@ -26,6 +26,7 @@ CONF_FILE=/etc/nova/nova.conf
 ./set-config.py $CONF_FILE keystone_authtoken admin_user                    nova
 ./set-config.py $CONF_FILE keystone_authtoken admin_password                $KEYSTONE_SERVICE_PASSWORD
 ./set-config.py $CONF_FILE DEFAULT            glance_host                   $GLANCE_HOST_IP
+./set-config.py $CONF_FILE DEFAULT            memcached_servers             $CONTROLLER_NODE_MANAGEMENT_IP:11211
 
 if [ $NETWORK_API_CLASS = 'nova-network' ]; then
     echo "NETWORK_API_CLASS = nova-network"
