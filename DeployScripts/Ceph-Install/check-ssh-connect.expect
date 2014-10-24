@@ -1,1 +1,24 @@
-######
+#!/usr/bin/expect
+
+#timeout = 2 days
+
+set timeout 172800
+
+set node  [lindex $argv 0]
+
+spawn ssh root@$node
+
+expect {
+    #first connect, no public key in ~/.ssh/known_hosts
+    "Are you sure you want to continue connecting (yes/no)?" {
+        send   "yes\r"
+        expect ":~#"
+        send   "ifconfig;exit;\r"
+    }
+    #already has public key in ~/.ssh/known_hosts
+    ":~#" {
+        send "ifconfig;exit;\r"
+    }
+}
+
+expect eof
