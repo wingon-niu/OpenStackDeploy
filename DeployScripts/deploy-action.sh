@@ -71,6 +71,107 @@ for s in $(cat $DST_PATH/$PREFIX_COMPUTER_NODES-Computer-Nodes.txt); do
     echo $MY_IP >> $CONF_DEPLOY_DIR/Computer-Nodes-IPs.txt
 done
 
+#If use ceph
+MY_GLANCE_STORAGE=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_STORAGE-Storage.txt GLANCE_STORAGE)
+MY_CINDER_STORAGE=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_STORAGE-Storage.txt CINDER_STORAGE)
+MY_NOVA_STORAGE=$($CMD_PATH/get-conf-data.sh   $DST_PATH/$PREFIX_STORAGE-Storage.txt NOVA_STORAGE)
+
+if [ $MY_GLANCE_STORAGE = 'ceph' -o $MY_CINDER_STORAGE = 'ceph' -o $MY_NOVA_STORAGE = 'ceph' ]; then
+    ###### Temp action begin ####################################
+
+    #Generate 101-ceph-admin-node.txt
+    rm -f $DST_PATH/101-ceph-admin-node.txt
+    touch $DST_PATH/101-ceph-admin-node.txt
+    tail -n 1 $DST_PATH/$PREFIX_FRONT_NODES-Front-Nodes.txt >> $DST_PATH/101-ceph-admin-node.txt
+
+    #Generate 101-ceph-mon-node.txt
+    rm -f $DST_PATH/101-ceph-mon-node.txt
+    touch $DST_PATH/101-ceph-mon-node.txt
+    cat $DST_PATH/$PREFIX_COMPUTER_NODES-Computer-Nodes.txt >> $DST_PATH/101-ceph-mon-node.txt
+
+    #Generate 101-ceph-osd-node.txt
+    rm -f $DST_PATH/101-ceph-osd-node.txt
+    touch $DST_PATH/101-ceph-osd-node.txt
+    cat $DST_PATH/$PREFIX_COMPUTER_NODES-Computer-Nodes.txt >> $DST_PATH/101-ceph-osd-node.txt
+
+    #Generate 101-ceph-mds-node.txt
+    rm -f $DST_PATH/101-ceph-mds-node.txt
+    touch $DST_PATH/101-ceph-mds-node.txt
+    head -n 1 $DST_PATH/$PREFIX_COMPUTER_NODES-Computer-Nodes.txt >> $DST_PATH/101-ceph-mds-node.txt
+
+    ###### Temp action end   ####################################
+
+    PREFIX_CEPH_ADMIN_NODE=$($CMD_PATH/get-max-prefix.sh $DST_PATH ceph-admin-node.txt)
+    PREFIX_CEPH_MON_NODE=$($CMD_PATH/get-max-prefix.sh   $DST_PATH ceph-mon-node.txt)
+    PREFIX_CEPH_OSD_NODE=$($CMD_PATH/get-max-prefix.sh   $DST_PATH ceph-osd-node.txt)
+    PREFIX_CEPH_MDS_NODE=$($CMD_PATH/get-max-prefix.sh   $DST_PATH ceph-mds-node.txt)
+
+    CEPH_EXT_NET_NIC_NAME=$MY_NIC_NAME
+    CEPH_ADMIN_NET_NIC_NAME=$($CMD_PATH/get-conf-data.sh   $DST_PATH/$PREFIX_NETWORK_CONF-Network-Conf.txt Admin-net-nic-name)
+    CEPH_PUBLIC_NET_NIC_NAME=$($CMD_PATH/get-conf-data.sh  $DST_PATH/$PREFIX_NETWORK_CONF-Network-Conf.txt Ceph-public-net-nic-name)
+    CEPH_CLUSTER_NET_NIC_NAME=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_NETWORK_CONF-Network-Conf.txt Ceph-cluster-net-nic-name)
+    if [ "$CEPH_PUBLIC_NET_NIC_NAME" = '' ]; then
+        CEPH_PUBLIC_NET_NIC_NAME=$($CMD_PATH/get-conf-data.sh  $DST_PATH/$PREFIX_NETWORK_CONF-Network-Conf.txt Admin-net-nic-name)
+    fi
+    if [ "$CEPH_CLUSTER_NET_NIC_NAME" = '' ]; then
+        CEPH_CLUSTER_NET_NIC_NAME=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_NETWORK_CONF-Network-Conf.txt Admin-net-nic-name)
+    fi
+
+    #Generate distinct ceph client nodes file
+    cat $DST_PATH/$PREFIX_CONTROLLER_NODES-Controller-Nodes.txt > ./Ceph-Install/conf/ceph-client-nodes.txt
+    ./Ceph-Install/delete-file2-in-file1.sh ./Ceph-Install/conf/ceph-client-nodes.txt $DST_PATH/$PREFIX_COMPUTER_NODES-Computer-Nodes.txt
+    cat $DST_PATH/$PREFIX_COMPUTER_NODES-Computer-Nodes.txt    >> ./Ceph-Install/conf/ceph-client-nodes.txt
+    ./Ceph-Install/delete-file2-in-file1.sh ./Ceph-Install/conf/ceph-client-nodes.txt $DST_PATH/$PREFIX_CEPH_ADMIN_NODE-ceph-admin-node.txt
+    ./Ceph-Install/delete-file2-in-file1.sh ./Ceph-Install/conf/ceph-client-nodes.txt $DST_PATH/$PREFIX_CEPH_MON_NODE-ceph-mon-node.txt
+    ./Ceph-Install/delete-file2-in-file1.sh ./Ceph-Install/conf/ceph-client-nodes.txt $DST_PATH/$PREFIX_CEPH_OSD_NODE-ceph-osd-node.txt
+    ./Ceph-Install/delete-file2-in-file1.sh ./Ceph-Install/conf/ceph-client-nodes.txt $DST_PATH/$PREFIX_CEPH_MDS_NODE-ceph-mds-node.txt
+
+    #Generate distinct ceph server nodes file
+    cat $DST_PATH/$PREFIX_CEPH_MON_NODE-ceph-mon-node.txt  > ./Ceph-Install/conf/ceph-server-nodes.txt
+    ./Ceph-Install/delete-file2-in-file1.sh ./Ceph-Install/conf/ceph-server-nodes.txt $DST_PATH/$PREFIX_CEPH_OSD_NODE-ceph-osd-node.txt
+    cat $DST_PATH/$PREFIX_CEPH_OSD_NODE-ceph-osd-node.txt >> ./Ceph-Install/conf/ceph-server-nodes.txt
+    ./Ceph-Install/delete-file2-in-file1.sh ./Ceph-Install/conf/ceph-server-nodes.txt $DST_PATH/$PREFIX_CEPH_MDS_NODE-ceph-mds-node.txt
+    cat $DST_PATH/$PREFIX_CEPH_MDS_NODE-ceph-mds-node.txt >> ./Ceph-Install/conf/ceph-server-nodes.txt
+
+    #Generate ceph admin node ext ip file
+    server_name=$(head -n 1 $DST_PATH/$PREFIX_CEPH_ADMIN_NODE-ceph-admin-node.txt)
+    MY_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_EXT_NET_NIC_NAME)
+    echo $MY_IP > ./Ceph-Install/conf/ceph-admin-node-ext-ip.txt
+
+    #Generate ceph client and server nodes ext ip file
+    rm -f ./Ceph-Install/conf/ceph-client-server-nodes-ext-ip.txt
+    touch ./Ceph-Install/conf/ceph-client-server-nodes-ext-ip.txt
+    for server_name in $(cat ./Ceph-Install/conf/ceph-client-nodes.txt); do
+        MY_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_EXT_NET_NIC_NAME)
+        echo $MY_IP >> ./Ceph-Install/conf/ceph-client-server-nodes-ext-ip.txt
+    done
+    for server_name in $(cat ./Ceph-Install/conf/ceph-server-nodes.txt); do
+        MY_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_EXT_NET_NIC_NAME)
+        echo $MY_IP >> ./Ceph-Install/conf/ceph-client-server-nodes-ext-ip.txt
+    done
+
+    #Generate ceph client nodes hosts file
+    echo "#Used for ceph"  > ./Ceph-Install/conf/ceph-client-nodes-hosts.txt
+    for server_name in $(cat ./Ceph-Install/conf/ceph-client-nodes.txt); do
+        MY_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_ADMIN_NET_NIC_NAME)
+        MY_HOSTNAME=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_SERVER_INFO-Server-Info.txt ${server_name}-hostname)
+        echo "$MY_IP  $MY_HOSTNAME" >> ./Ceph-Install/conf/ceph-client-nodes-hosts.txt
+    done
+
+    #Generate ceph server nodes hosts file
+    echo "#Used for ceph"  > ./Ceph-Install/conf/ceph-server-nodes-hosts.txt
+    for server_name in $(cat ./Ceph-Install/conf/ceph-server-nodes.txt); do
+        MY_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_PUBLIC_NET_NIC_NAME)
+        MY_HOSTNAME=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_SERVER_INFO-Server-Info.txt ${server_name}-hostname)
+        echo "$MY_IP  $MY_HOSTNAME" >> ./Ceph-Install/conf/ceph-server-nodes-hosts.txt
+    done
+
+    #
+
+    #Remember to save prefix info of ceph when ceph install completed
+fi
+#End if use ceph
+
 #Copy files to servers
 mkdir -p $CMD_PATH/log
 echo $STR_PING_ALL_SERVERS
