@@ -1,0 +1,28 @@
+#!/usr/bin/expect
+
+#timeout = 2 days
+
+set timeout 172800
+
+set node_ip  [lindex $argv 0]
+set run_cmd  [lindex $argv 1]
+set log_name [lindex $argv 2]
+
+spawn ssh root@$node_ip
+
+#expect "s password:"
+#send "111111\r"
+
+expect ":~#"
+send "cd /root/Ceph-Install\r"
+
+expect "/Ceph-Install#"
+send "mkdir -p ./log\r"
+
+expect "/Ceph-Install#"
+send "./$run_cmd 2>&1 | tee ./log/$log_name\r"
+
+expect "/Ceph-Install#"
+send "exit\r"
+
+expect eof
