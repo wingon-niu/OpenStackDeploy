@@ -14,6 +14,29 @@ fi
 #Start ceph cluster installation
 mkdir -p $CONF_DEPLOY_DIR
 
+#Modify /etc/hosts for ceph nodes
+echo "Modify /etc/hosts for ceph nodes"
+
+for MY_IP in $(cat ./Ceph-Install/conf/ceph-client-server-nodes-ext-ip.txt); do
+    echo $MY_IP
+    rsync -vaI root@$MY_IP:/etc/hosts ./
+    ./Ceph-Install/delete-file2-in-file1.sh ./hosts ./Ceph-Install/conf/ceph-server-nodes-hosts.txt
+    cat ./Ceph-Install/conf/ceph-server-nodes-hosts.txt >> ./hosts
+    rsync -vaI ./hosts root@$MY_IP:/etc/
+done
+
+for MY_IP in $(cat ./Ceph-Install/conf/ceph-admin-node-ext-ip.txt); do
+    echo $MY_IP
+    rsync -vaI root@$MY_IP:/etc/hosts ./
+    ./Ceph-Install/delete-file2-in-file1.sh ./hosts ./Ceph-Install/conf/ceph-server-nodes-hosts.txt
+    cat ./Ceph-Install/conf/ceph-server-nodes-hosts.txt >> ./hosts
+    ./Ceph-Install/delete-file2-in-file1.sh ./hosts ./Ceph-Install/conf/ceph-client-nodes-hosts.txt
+    cat ./Ceph-Install/conf/ceph-client-nodes-hosts.txt >> ./hosts
+    rsync -vaI ./hosts root@$MY_IP:/etc/
+done
+
+rm -f ./hosts
+
 echo $STR_BEGIN_CEPH_CLUSTER_INSTALL_PART_1
 
 #
