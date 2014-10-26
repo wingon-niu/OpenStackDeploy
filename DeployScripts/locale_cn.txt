@@ -25,3 +25,5 @@ STR_RUN_POST_INSTALL_SCRIPT="7.正在进行安装后处理，请稍候，可以�
 STR_COMPLETE_POST_INSTALL_SCRIPT="安装后处理完毕."
 STR_VISIT_INFO="访问地址："
 STR_THANKS_INFO="感谢"
+STR_BEGIN_CEPH_CLUSTER_INSTALL_PART_1="### 1 ### : 开始安装配置Ceph集群第1部分，请稍候，可以使用 'screen -r niu' 查看安装过程..."
+STR_BEGIN_CEPH_CLUSTER_INSTALL_PART_2="### 2 ### : 开始安装配置Ceph集群第2部分，请稍候，可以使用 'screen -r niu' 查看安装过程..."

@@ -25,3 +25,5 @@ STR_RUN_POST_INSTALL_SCRIPT="7.Run post install scripts, please wait, use 'scree
 STR_COMPLETE_POST_INSTALL_SCRIPT="Run post install scripts completed."
 STR_VISIT_INFO="Visit address: "
 STR_THANKS_INFO="Thanks"
+STR_BEGIN_CEPH_CLUSTER_INSTALL_PART_1="### 1 ### : Now installing ceph cluster part 1, please wait, use 'screen -r niu' to see the process..."
+STR_BEGIN_CEPH_CLUSTER_INSTALL_PART_2="### 2 ### : Now installing ceph cluster part 2, please wait, use 'screen -r niu' to see the process..."
