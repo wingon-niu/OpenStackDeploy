@@ -166,7 +166,49 @@ if [ $MY_GLANCE_STORAGE = 'ceph' -o $MY_CINDER_STORAGE = 'ceph' -o $MY_NOVA_STOR
         echo "$MY_IP  $MY_HOSTNAME" >> ./Ceph-Install/conf/ceph-server-nodes-hosts.txt
     done
 
-    #
+    #Generate ceph mon nodes ip and hostname info file
+    rm -f ./Ceph-Install/conf/ceph-mon-ip-hostname-info.txt
+    touch ./Ceph-Install/conf/ceph-mon-ip-hostname-info.txt
+    for server_name in $(cat $DST_PATH/$PREFIX_CEPH_MON_NODE-ceph-mon-node.txt); do
+        MY_PUBLIC_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh  $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_PUBLIC_NET_NIC_NAME)
+        MY_CLUSTER_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_CLUSTER_NET_NIC_NAME)
+        MY_HOSTNAME=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_SERVER_INFO-Server-Info.txt ${server_name}-hostname)
+        echo "$MY_PUBLIC_IP $MY_CLUSTER_IP $MY_HOSTNAME" >> ./Ceph-Install/conf/ceph-mon-ip-hostname-info.txt
+    done
+
+    #Generate ceph osd nodes ip and hostname info file
+    rm -f ./Ceph-Install/conf/ceph-osd-ip-hostname-info.txt
+    touch ./Ceph-Install/conf/ceph-osd-ip-hostname-info.txt
+    for server_name in $(cat $DST_PATH/$PREFIX_CEPH_OSD_NODE-ceph-osd-node.txt); do
+        MY_PUBLIC_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh  $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_PUBLIC_NET_NIC_NAME)
+        MY_CLUSTER_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_CLUSTER_NET_NIC_NAME)
+        MY_HOSTNAME=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_SERVER_INFO-Server-Info.txt ${server_name}-hostname)
+        echo "$MY_PUBLIC_IP $MY_CLUSTER_IP $MY_HOSTNAME" >> ./Ceph-Install/conf/ceph-osd-ip-hostname-info.txt
+    done
+
+    #Generate ceph mds nodes ip and hostname info file
+    rm -f ./Ceph-Install/conf/ceph-mds-ip-hostname-info.txt
+    touch ./Ceph-Install/conf/ceph-mds-ip-hostname-info.txt
+    for server_name in $(cat $DST_PATH/$PREFIX_CEPH_MDS_NODE-ceph-mds-node.txt); do
+        MY_PUBLIC_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh  $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_PUBLIC_NET_NIC_NAME)
+        MY_CLUSTER_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_CLUSTER_NET_NIC_NAME)
+        MY_HOSTNAME=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_SERVER_INFO-Server-Info.txt ${server_name}-hostname)
+        echo "$MY_PUBLIC_IP $MY_CLUSTER_IP $MY_HOSTNAME" >> ./Ceph-Install/conf/ceph-mds-ip-hostname-info.txt
+    done
+
+    #Generate ceph client nodes hostname info file
+    rm -f ./Ceph-Install/conf/ceph-client-hostname-info.txt
+    touch ./Ceph-Install/conf/ceph-client-hostname-info.txt
+    for host_name in $(cat ./Ceph-Install/conf/ceph-client-nodes-hosts.txt | grep -v '#' | awk '{print $2}'); do
+        echo "aaa bbb $host_name" >> ./Ceph-Install/conf/ceph-client-hostname-info.txt
+    done
+
+    #Generate ceph server nodes hostname info file
+    rm -f ./Ceph-Install/conf/ceph-server-hostname-info.txt
+    touch ./Ceph-Install/conf/ceph-server-hostname-info.txt
+    for host_name in $(cat ./Ceph-Install/conf/ceph-server-nodes-hosts.txt | grep -v '#' | awk '{print $2}'); do
+        echo "aaa bbb $host_name" >> ./Ceph-Install/conf/ceph-server-hostname-info.txt
+    done
 
     #Remember to save prefix info of ceph when ceph install completed
 fi
