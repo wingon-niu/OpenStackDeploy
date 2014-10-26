@@ -32,6 +32,17 @@ done
 MY_IP=$(head -n 1 $CONF_DEPLOY_DIR/Controller-Nodes-IPs.txt)
 rsync -va ./images $MY_IP:/root/OpenStack-Install-HA/
 
+#If use ceph
+PREFIX_STORAGE=$($CMD_PATH/get-max-prefix.sh   $DST_PATH Storage.txt)
+MY_GLANCE_STORAGE=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_STORAGE-Storage.txt GLANCE_STORAGE)
+MY_CINDER_STORAGE=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_STORAGE-Storage.txt CINDER_STORAGE)
+MY_NOVA_STORAGE=$($CMD_PATH/get-conf-data.sh   $DST_PATH/$PREFIX_STORAGE-Storage.txt NOVA_STORAGE)
+
+if [ $MY_GLANCE_STORAGE = 'ceph' -o $MY_CINDER_STORAGE = 'ceph' -o $MY_NOVA_STORAGE = 'ceph' ]; then
+    MY_IP=$(head -n 1 ./Ceph-Install/conf/ceph-admin-node-ext-ip.txt)
+    rsync -vaI ./Ceph-Install $MY_IP:/root/
+fi
+
 #
 
 exit 0
