@@ -37,8 +37,58 @@ if [ "$CEPH_PUB_NET" != "$CEPH_CLT_NET" ]; then
     /root/OpenStack-Install-HA/set-config.py ./ceph.conf global cluster_network $CEPH_CLT_NET
 fi
 
-#Install Ceph
-#here
+#Install Ceph on ceph server nodes
+CEPH_SERVER_NODES=$($CURRENT_DIR/gen-server-info-list.sh $CURRENT_DIR/conf/ceph-server-hostname-info.txt "")
+echo "Run command: ceph-deploy install $CEPH_SERVER_NODES"
+################## ceph-deploy install $CEPH_SERVER_NODES
+
+#Add the initial monitor(s) and gather the keys
+echo "Run command: ceph-deploy mon create-initial"
+################## ceph-deploy mon create-initial
+
+#Create directory on ceph osd nodes
+OSD_DATA_DIR=/data/osd
+for HOST_NAME in $(cat $CURRENT_DIR/conf/ceph-osd-ip-hostname-info.txt | awk '{print $3}'); do
+    echo "Run command on $HOST_NAME: mkdir -p $OSD_DATA_DIR"
+    ssh root@$HOST_NAME             "mkdir -p $OSD_DATA_DIR"
+done
+
+#Add OSDs
+CEPH_OSD_NODES_INFO=$($CURRENT_DIR/gen-server-info-list.sh $CURRENT_DIR/conf/ceph-osd-ip-hostname-info.txt ":$OSD_DATA_DIR")
+echo "Run command: ceph-deploy osd prepare  $CEPH_OSD_NODES_INFO"
+################## ceph-deploy osd prepare  $CEPH_OSD_NODES_INFO
+echo "Run command: ceph-deploy osd activate $CEPH_OSD_NODES_INFO"
+################## ceph-deploy osd activate $CEPH_OSD_NODES_INFO
+
+#Send configuration file and admin key to all ceph server nodes
+echo "Run command: ceph-deploy admin $CEPH_SERVER_NODES"
+################## ceph-deploy admin $CEPH_SERVER_NODES
+
+#Set permissions for the ceph.client.admin.keyring on all ceph server nodes
+for HOST_NAME in $(cat $CURRENT_DIR/conf/ceph-server-hostname-info.txt | awk '{print $3}'); do
+    echo "Run command on $HOST_NAME: chmod +r /etc/ceph/ceph.client.admin.keyring"
+    ssh root@$HOST_NAME             "chmod +r /etc/ceph/ceph.client.admin.keyring"
+done
+
+#Add a metadata server
+CEPH_MDS_NODES=$($CURRENT_DIR/gen-server-info-list.sh $CURRENT_DIR/conf/ceph-mds-ip-hostname-info.txt "")
+echo "Run command: ceph-deploy mds create $CEPH_MDS_NODES"
+################## ceph-deploy mds create $CEPH_MDS_NODES
+
+#Install Ceph on ceph client nodes
+CEPH_CLIENT_NODES=$($CURRENT_DIR/gen-server-info-list.sh $CURRENT_DIR/conf/ceph-client-hostname-info.txt "")
+echo "Run command: ceph-deploy install $CEPH_CLIENT_NODES"
+################## ceph-deploy install $CEPH_CLIENT_NODES
+
+#Send configuration file and admin key to all ceph client nodes
+echo "Run command: ceph-deploy admin $CEPH_CLIENT_NODES"
+################## ceph-deploy admin $CEPH_CLIENT_NODES
+
+#Set permissions for the ceph.client.admin.keyring on all ceph client nodes
+for HOST_NAME in $(cat $CURRENT_DIR/conf/ceph-client-hostname-info.txt | awk '{print $3}'); do
+    echo "Run command on $HOST_NAME: chmod +r /etc/ceph/ceph.client.admin.keyring"
+    ssh root@$HOST_NAME             "chmod +r /etc/ceph/ceph.client.admin.keyring"
+done
 
 #
 
