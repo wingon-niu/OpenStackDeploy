@@ -20,7 +20,7 @@ pwd
 #Create the cluster
 CEPH_MON_NODES=$($CURRENT_DIR/gen-server-info-list.sh $CURRENT_DIR/conf/ceph-mon-ip-hostname-info.txt "")
 echo "Run command: ceph-deploy new $CEPH_MON_NODES"
-################## ceph-deploy new $CEPH_MON_NODES
+                   ceph-deploy new $CEPH_MON_NODES
 
 #Change the default number of replicas in the Ceph configuration file from 3 to 2
 /root/OpenStack-Install-HA/set-config.py ./ceph.conf global osd_pool_default_size 2
@@ -40,11 +40,11 @@ fi
 #Install Ceph on ceph server nodes
 CEPH_SERVER_NODES=$($CURRENT_DIR/gen-server-info-list.sh $CURRENT_DIR/conf/ceph-server-hostname-info.txt "")
 echo "Run command: ceph-deploy install $CEPH_SERVER_NODES"
-################## ceph-deploy install $CEPH_SERVER_NODES
+                   ceph-deploy install $CEPH_SERVER_NODES
 
 #Add the initial monitor(s) and gather the keys
 echo "Run command: ceph-deploy mon create-initial"
-################## ceph-deploy mon create-initial
+                   ceph-deploy mon create-initial
 
 #Create directory on ceph osd nodes
 OSD_DATA_DIR=/data/osd
@@ -56,13 +56,13 @@ done
 #Add OSDs
 CEPH_OSD_NODES_INFO=$($CURRENT_DIR/gen-server-info-list.sh $CURRENT_DIR/conf/ceph-osd-ip-hostname-info.txt ":$OSD_DATA_DIR")
 echo "Run command: ceph-deploy osd prepare  $CEPH_OSD_NODES_INFO"
-################## ceph-deploy osd prepare  $CEPH_OSD_NODES_INFO
+                   ceph-deploy osd prepare  $CEPH_OSD_NODES_INFO
 echo "Run command: ceph-deploy osd activate $CEPH_OSD_NODES_INFO"
-################## ceph-deploy osd activate $CEPH_OSD_NODES_INFO
+                   ceph-deploy osd activate $CEPH_OSD_NODES_INFO
 
 #Send configuration file and admin key to all ceph server nodes
 echo "Run command: ceph-deploy admin $CEPH_SERVER_NODES"
-################## ceph-deploy admin $CEPH_SERVER_NODES
+                   ceph-deploy admin $CEPH_SERVER_NODES
 
 #Set permissions for the ceph.client.admin.keyring on all ceph server nodes
 for HOST_NAME in $(cat $CURRENT_DIR/conf/ceph-server-hostname-info.txt | awk '{print $3}'); do
@@ -73,16 +73,16 @@ done
 #Add a metadata server
 CEPH_MDS_NODES=$($CURRENT_DIR/gen-server-info-list.sh $CURRENT_DIR/conf/ceph-mds-ip-hostname-info.txt "")
 echo "Run command: ceph-deploy mds create $CEPH_MDS_NODES"
-################## ceph-deploy mds create $CEPH_MDS_NODES
+                   ceph-deploy mds create $CEPH_MDS_NODES
 
 #Install Ceph on ceph client nodes
 CEPH_CLIENT_NODES=$($CURRENT_DIR/gen-server-info-list.sh $CURRENT_DIR/conf/ceph-client-hostname-info.txt "")
 echo "Run command: ceph-deploy install $CEPH_CLIENT_NODES"
-################## ceph-deploy install $CEPH_CLIENT_NODES
+                   ceph-deploy install $CEPH_CLIENT_NODES
 
 #Send configuration file and admin key to all ceph client nodes
 echo "Run command: ceph-deploy admin $CEPH_CLIENT_NODES"
-################## ceph-deploy admin $CEPH_CLIENT_NODES
+                   ceph-deploy admin $CEPH_CLIENT_NODES
 
 #Set permissions for the ceph.client.admin.keyring on all ceph client nodes
 for HOST_NAME in $(cat $CURRENT_DIR/conf/ceph-client-hostname-info.txt | awk '{print $3}'); do
