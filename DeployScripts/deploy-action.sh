@@ -230,7 +230,8 @@ $CMD_PATH/prepare-all-servers.sh $RUN_DATE
 
 #Install ceph if needed
 if [ $MY_GLANCE_STORAGE = 'ceph' -o $MY_CINDER_STORAGE = 'ceph' -o $MY_NOVA_STORAGE = 'ceph' ]; then
-    $CMD_PATH/ceph-cluster-install.sh $RUN_DATE
+    $CMD_PATH/ceph-cluster-install.sh             $RUN_DATE
+    $CMD_PATH/ceph-cluster-post-install-script.sh $RUN_DATE
 fi
 
 #Installation on Front Nodes
