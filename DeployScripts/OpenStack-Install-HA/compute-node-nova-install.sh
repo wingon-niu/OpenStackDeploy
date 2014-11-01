@@ -17,6 +17,13 @@ else
     apt-get install -y nova-compute python-guestfs
 fi
 
+if [ "$NOVA_STORAGE" = "ceph" ]; then
+    echo "NOVA_STORAGE = ceph"
+    apt-get install -y ceph-common
+else
+    echo "NOVA_STORAGE = local_disk"
+fi
+
 #Make the current kernel readable
 dpkg-statoverride  --update --add root root 0644 /boot/vmlinuz-$(uname -r)
 cp ./statoverride /etc/kernel/postinst.d/statoverride

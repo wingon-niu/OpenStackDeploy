@@ -10,15 +10,14 @@ date
 apt-get install -y cinder-api cinder-scheduler
 apt-get install -y lvm2 cinder-volume
 
-#Configure the iscsi services
-#sed -i 's/false/true/g' /etc/default/iscsitarget
-
-#Restart the services
-#service iscsitarget start
-#service open-iscsi start
-
-#Create a volumegroup and name it cinder-volumes
-./cinder-volumes-create.sh
+if [ "$CINDER_STORAGE" = "ceph" ]; then
+    echo "CINDER_STORAGE = ceph"
+    apt-get install -y ceph-common
+else
+    echo "CINDER_STORAGE = local_disk"
+    #Create a volumegroup and name it cinder-volumes
+    ./cinder-volumes-create.sh
+fi
 
 #Modify conf files
 ./cinder-modify-conf-files.sh

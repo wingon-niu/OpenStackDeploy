@@ -8,6 +8,13 @@ date
 #Glance installation
 apt-get install -y glance python-glanceclient
 
+if [ "$GLANCE_STORAGE" = "ceph" ]; then
+    echo "GLANCE_STORAGE = ceph"
+    apt-get install -y python-ceph
+else
+    echo "GLANCE_STORAGE = local_disk"
+fi
+
 #Modify conf files
 ./glance-modify-conf-files.sh
 
