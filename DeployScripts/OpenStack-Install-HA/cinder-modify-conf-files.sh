@@ -41,6 +41,34 @@ conf_file_02=/etc/cinder/cinder.conf
 ./set-config.py $conf_file_02 DEFAULT            rabbit_ha_queues         true
 ./set-config.py $conf_file_02 DEFAULT            glance_host              $GLANCE_HOST_IP
 
+if [ "$CINDER_STORAGE" = "ceph" ]; then
+    echo "CINDER_STORAGE = ceph"
+    ./set-config.py $conf_file_02 DEFAULT        volume_driver                     cinder.volume.drivers.rbd.RBDDriver
+    ./set-config.py $conf_file_02 DEFAULT        rbd_pool                          volumes
+    ./set-config.py $conf_file_02 DEFAULT        rbd_ceph_conf                     /etc/ceph/ceph.conf
+    ./set-config.py $conf_file_02 DEFAULT        rbd_flatten_volume_from_snapshot  false
+    ./set-config.py $conf_file_02 DEFAULT        rbd_max_clone_depth               5
+    ./set-config.py $conf_file_02 DEFAULT        rbd_store_chunk_size              4
+    ./set-config.py $conf_file_02 DEFAULT        rados_connect_timeout             -1
+    ./set-config.py $conf_file_02 DEFAULT        glance_api_version                2
+    ./set-config.py $conf_file_02 DEFAULT        rbd_user                          cinder
+    ./set-config.py $conf_file_02 DEFAULT        rbd_secret_uuid                   $(cat ./uuid.txt | awk '{print $1}')
+    ./set-config.py $conf_file_02 DEFAULT        backup_driver                     cinder.backup.drivers.ceph
+    ./set-config.py $conf_file_02 DEFAULT        backup_ceph_conf                  /etc/ceph/ceph.conf
+    ./set-config.py $conf_file_02 DEFAULT        backup_ceph_user                  cinder-backup
+    ./set-config.py $conf_file_02 DEFAULT        backup_ceph_chunk_size            134217728
+    ./set-config.py $conf_file_02 DEFAULT        backup_ceph_pool                  backups
+    ./set-config.py $conf_file_02 DEFAULT        backup_ceph_stripe_unit           0
+    ./set-config.py $conf_file_02 DEFAULT        backup_ceph_stripe_count          0
+    ./set-config.py $conf_file_02 DEFAULT        restore_discard_excess_bytes      true
+    chown cinder:cinder /etc/ceph/ceph.client.cinder.keyring
+    chown cinder:cinder /etc/ceph/ceph.client.cinder-backup.keyring
+else
+    echo "CINDER_STORAGE = local_disk"
+    ./del-config.py $conf_file_02 DEFAULT        volume_driver
+    ./del-config.py $conf_file_02 DEFAULT        backup_driver
+fi
+
 #sed -i '/DEFAULT/,$d' $conf_file_02
 #echo "[DEFAULT]"                                                                     >> $conf_file_02
 #echo "rootwrap_config=/etc/cinder/rootwrap.conf"                                     >> $conf_file_02
