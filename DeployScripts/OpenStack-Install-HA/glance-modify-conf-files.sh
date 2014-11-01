@@ -62,6 +62,20 @@ conf_file_03=/etc/glance/glance-api.conf
 ./set-config.py $conf_file_03 paste_deploy flavor                   keystone
 #./set-config.py $conf_file_03 DEFAULT     db_enforce_mysql_charset false
 
+if [ "$GLANCE_STORAGE" = "ceph" ]; then
+    echo "GLANCE_STORAGE = ceph"
+    ./set-config.py $conf_file_03 DEFAULT       default_store          rbd
+    ./set-config.py $conf_file_03 DEFAULT       rbd_store_user         glance
+    ./set-config.py $conf_file_03 DEFAULT       rbd_store_pool         images
+    ./set-config.py $conf_file_03 DEFAULT       show_image_direct_url  True
+    ./set-config.py $conf_file_03 paste_deploy  flavor                 keystone
+    chown glance:glance /etc/ceph/ceph.client.glance.keyring
+else
+    echo "GLANCE_STORAGE = local_disk"
+    ./set-config.py $conf_file_03 DEFAULT       default_store          file
+    ./set-config.py $conf_file_03 DEFAULT       show_image_direct_url  False
+fi
+
 #sed -i '/^workers =/c workers = 4'                                                                    $conf_file_03
 #sed -i '/^notifier_strategy =/c notifier_strategy = rabbit'                                           $conf_file_03
 #sed -i "/^rabbit_host =/c rabbit_host = $MESSAGE_QUEUE_IP"                                            $conf_file_03
