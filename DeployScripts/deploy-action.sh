@@ -76,7 +76,7 @@ MY_GLANCE_STORAGE=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_STORAGE-Storage
 MY_CINDER_STORAGE=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_STORAGE-Storage.txt CINDER_STORAGE)
 MY_NOVA_STORAGE=$($CMD_PATH/get-conf-data.sh   $DST_PATH/$PREFIX_STORAGE-Storage.txt NOVA_STORAGE)
 
-if [ $MY_GLANCE_STORAGE = 'ceph' -o $MY_CINDER_STORAGE = 'ceph' -o $MY_NOVA_STORAGE = 'ceph' ]; then
+if [ "$MY_GLANCE_STORAGE" = "ceph" -o "$MY_CINDER_STORAGE" = "ceph" -o "$MY_NOVA_STORAGE" = "ceph" ]; then
     ###### Temp action begin ####################################
 
     #Generate 101-ceph-admin-node.txt
@@ -229,7 +229,7 @@ echo $STR_PREPARE_ALL_SERVERS
 $CMD_PATH/prepare-all-servers.sh $RUN_DATE
 
 #Install ceph if needed
-if [ $MY_GLANCE_STORAGE = 'ceph' -o $MY_CINDER_STORAGE = 'ceph' -o $MY_NOVA_STORAGE = 'ceph' ]; then
+if [ "$MY_GLANCE_STORAGE" = "ceph" -o "$MY_CINDER_STORAGE" = "ceph" -o "$MY_NOVA_STORAGE" = "ceph" ]; then
     $CMD_PATH/ceph-cluster-install.sh             $RUN_DATE
     $CMD_PATH/ceph-cluster-post-install-script.sh $RUN_DATE
 fi
@@ -246,8 +246,10 @@ $CMD_PATH/network-nodes-install.sh $RUN_DATE
 #Installation on Computer Nodes
 $CMD_PATH/computer-nodes-install.sh $RUN_DATE
 
-#Stop 5 services on last 2 controller nodes
-$CMD_PATH/stop-5-services-on-last-2-controller-nodes.sh
+#Stop 2 services on last 2 controller nodes when not use ceph
+if [ "$MY_GLANCE_STORAGE" != "ceph" -o "$MY_CINDER_STORAGE" != "ceph" ]; then
+    $CMD_PATH/stop-5-services-on-last-2-controller-nodes.sh
+fi
 
 #Run post installation scripts on first controller node
 $CMD_PATH/run-post-install-script.sh $RUN_DATE
