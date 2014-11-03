@@ -251,7 +251,7 @@ if [ "$MY_GLANCE_STORAGE" != "ceph" -o "$MY_CINDER_STORAGE" != "ceph" ]; then
     $CMD_PATH/stop-5-services-on-last-2-controller-nodes.sh
 fi
 
-#Run post installation scripts on first controller node
+#Run post install scripts
 $CMD_PATH/run-post-install-script.sh $RUN_DATE
 
 #

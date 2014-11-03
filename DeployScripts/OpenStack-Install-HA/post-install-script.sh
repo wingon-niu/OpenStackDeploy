@@ -39,8 +39,23 @@ else
     echo "NETWORK_API_CLASS = unknown type"
 fi
 
-glance image-create --name cirros-0.3.2 --is-public true --container-format bare --disk-format qcow2 < ./images/cirros-0.3.2-x86_64-disk.img
+#If use ceph
+if [ "$GLANCE_STORAGE" = "ceph" -o "$CINDER_STORAGE" = "ceph" ]; then
+    echo "Use ceph block devices"
+    echo "Upload image"
+    glance image-create --name cirros-0.3.2.raw   --is-public true --container-format bare --disk-format raw   < ./images/cirros-0.3.2-x86_64-disk.raw
+    echo "Wait 5 seconds..."
+    sleep 5
+    MY_IMAGE_ID=$(glance image-list | grep "cirros-0.3.2.raw" | awk '{print $2}' | head -n 1)
+    echo "Create volume"
+    cinder create --image-id $MY_IMAGE_ID --display-name cirros-0.3.2.volume 10
+else
+    echo "Use local disk"
+    echo "Upload image"
+    glance image-create --name cirros-0.3.2.qcow2 --is-public true --container-format bare --disk-format qcow2 < ./images/cirros-0.3.2-x86_64-disk.img
+fi
 
+echo "Add common secgroup rules"
 nova secgroup-add-rule default icmp -1   -1   0.0.0.0/0
 nova secgroup-add-rule default tcp  22   22   0.0.0.0/0
 nova secgroup-add-rule default tcp  80   80   0.0.0.0/0
