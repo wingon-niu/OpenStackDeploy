@@ -38,7 +38,7 @@ MY_GLANCE_STORAGE=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_STORAGE-Storage
 MY_CINDER_STORAGE=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_STORAGE-Storage.txt CINDER_STORAGE)
 MY_NOVA_STORAGE=$($CMD_PATH/get-conf-data.sh   $DST_PATH/$PREFIX_STORAGE-Storage.txt NOVA_STORAGE)
 
-if [ $MY_GLANCE_STORAGE = 'ceph' -o $MY_CINDER_STORAGE = 'ceph' -o $MY_NOVA_STORAGE = 'ceph' ]; then
+if [ "$MY_GLANCE_STORAGE" = "ceph" -o "$MY_CINDER_STORAGE" = "ceph" -o "$MY_NOVA_STORAGE" = "ceph" ]; then
     MY_IP=$(head -n 1 ./Ceph-Install/conf/ceph-admin-node-ext-ip.txt)
     rsync -vaI ./Ceph-Install $MY_IP:/root/
 fi
