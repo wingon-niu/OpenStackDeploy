@@ -6,10 +6,13 @@ echo "Begin time of keystone-install:"
 date
 
 #Install keystone packages
-apt-get install -y keystone
+apt-get install -y keystone python-keystoneclient
 
 #Modify conf files
 ./keystone-modify-conf-files.sh
+
+#Remove the SQLite database file
+rm -f /var/lib/keystone/keystone.db
 
 #Restart the identity service then synchronize the database
 service keystone restart
