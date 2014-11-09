@@ -18,6 +18,9 @@ fi
 #Modify conf files
 ./glance-modify-conf-files.sh
 
+#Remove the SQLite database file
+rm -f /var/lib/glance/glance.sqlite
+
 #Restart Service Glance
 ./restart-service-glance.sh
 
