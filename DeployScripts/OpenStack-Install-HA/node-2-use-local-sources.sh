@@ -15,5 +15,7 @@ if [ $USE_OTHER_UBUNTU_APT_SOURCES = 'Yes' ]; then
 fi
 
 apt-get -y update
+apt-get -y upgrade
+apt-get -y dist-upgrade
 
 exit 0

@@ -2,8 +2,11 @@
 
 source ./env.sh
 
-#apt-get install -y ubuntu-cloud-keyring
-#echo "deb http://172.16.0.63/openstack precise-updates/icehouse main" > /etc/apt/sources.list.d/icehouse.list
+apt-get install -y ubuntu-cloud-keyring python-software-properties
+echo "deb       http://ubuntu-cloud.archive.canonical.com/ubuntu trusty-updates/juno main"   >  /etc/apt/sources.list.d/cloudarchive-juno.list
+echo "# deb-src http://ubuntu-cloud.archive.canonical.com/ubuntu trusty-updates/juno main"  >>  /etc/apt/sources.list.d/cloudarchive-juno.list
+
+#add-apt-repository cloud-archive:juno
 
 apt-get -y update
 apt-get -y upgrade
