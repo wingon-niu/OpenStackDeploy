@@ -25,14 +25,13 @@ conf_file_02=/etc/cinder/cinder.conf
 ./backup-file.sh $conf_file_02
 
 ./set-config.py $conf_file_02 database           connection               mysql://$CINDER_USER:$CINDER_PASS@$DATABASE_IP/cinder
-./set-config.py $conf_file_02 keystone_authtoken auth_uri                 http://$KEYSTONE_EXT_HOST_IP:5000
-./set-config.py $conf_file_02 keystone_authtoken auth_host                $KEYSTONE_HOST_IP
-./set-config.py $conf_file_02 keystone_authtoken auth_port                35357
-./set-config.py $conf_file_02 keystone_authtoken auth_protocol            http
+./set-config.py $conf_file_02 keystone_authtoken auth_uri                 http://$KEYSTONE_HOST_IP:5000/v2.0
+./set-config.py $conf_file_02 keystone_authtoken identity_uri             http://$KEYSTONE_HOST_IP:35357
 ./set-config.py $conf_file_02 keystone_authtoken admin_tenant_name        service
 ./set-config.py $conf_file_02 keystone_authtoken admin_user               cinder
 ./set-config.py $conf_file_02 keystone_authtoken admin_password           $KEYSTONE_SERVICE_PASSWORD
-./set-config.py $conf_file_02 DEFAULT            rpc_backend              cinder.openstack.common.rpc.impl_kombu
+./set-config.py $conf_file_02 DEFAULT            auth_strategy            keystone
+./set-config.py $conf_file_02 DEFAULT            rpc_backend              rabbit
 ./set-config.py $conf_file_02 DEFAULT            rabbit_hosts             $RABBIT_HOSTS
 ./set-config.py $conf_file_02 DEFAULT            rabbit_retry_interval    1
 ./set-config.py $conf_file_02 DEFAULT            rabbit_retry_backoff     2
@@ -40,6 +39,8 @@ conf_file_02=/etc/cinder/cinder.conf
 ./set-config.py $conf_file_02 DEFAULT            rabbit_durable_queues    false
 ./set-config.py $conf_file_02 DEFAULT            rabbit_ha_queues         true
 ./set-config.py $conf_file_02 DEFAULT            glance_host              $GLANCE_HOST_IP
+./set-config.py $conf_file_02 DEFAULT            my_ip                    $CONTROLLER_NODE_NOVA_MY_IP
+./set-config.py $conf_file_02 DEFAULT            verbose                  True
 
 if [ "$CINDER_STORAGE" = "ceph" ]; then
     echo "CINDER_STORAGE = ceph"

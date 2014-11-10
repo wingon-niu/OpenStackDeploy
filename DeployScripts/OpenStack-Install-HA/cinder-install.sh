@@ -7,8 +7,8 @@ date
 
 #Install the required packages
 #apt-get install -y iscsitarget open-iscsi iscsitarget-dkms
-apt-get install -y cinder-api cinder-scheduler
-apt-get install -y lvm2 cinder-volume
+apt-get install -y cinder-api cinder-scheduler python-cinderclient
+apt-get install -y lvm2 cinder-volume python-mysqldb
 
 if [ "$CINDER_STORAGE" = "ceph" ]; then
     echo "CINDER_STORAGE = ceph"
@@ -21,6 +21,9 @@ fi
 
 #Modify conf files
 ./cinder-modify-conf-files.sh
+
+#Remove the SQLite database file
+rm -f /var/lib/cinder/cinder.sqlite
 
 if [ $FIRST_CINDER_NODE = 'Yes' ]; then
     echo "FIRST_CINDER_NODE = Yes"
