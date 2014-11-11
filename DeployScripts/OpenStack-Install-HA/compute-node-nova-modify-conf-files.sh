@@ -15,20 +15,19 @@ CONF_FILE=/etc/nova/nova.conf
 ./set-config.py $CONF_FILE DEFAULT            rabbit_durable_queues         false
 ./set-config.py $CONF_FILE DEFAULT            rabbit_ha_queues              true
 ./set-config.py $CONF_FILE DEFAULT            auth_strategy                 keystone
-./set-config.py $CONF_FILE keystone_authtoken auth_uri                      http://$KEYSTONE_EXT_HOST_IP:5000
-./set-config.py $CONF_FILE keystone_authtoken auth_host                     $KEYSTONE_HOST_IP
-./set-config.py $CONF_FILE keystone_authtoken auth_port                     35357
-./set-config.py $CONF_FILE keystone_authtoken auth_protocol                 http
+./set-config.py $CONF_FILE keystone_authtoken auth_uri                      http://$KEYSTONE_HOST_IP:5000/v2.0
+./set-config.py $CONF_FILE keystone_authtoken identity_uri                  http://$KEYSTONE_HOST_IP:35357
 ./set-config.py $CONF_FILE keystone_authtoken admin_tenant_name             service
 ./set-config.py $CONF_FILE keystone_authtoken admin_user                    nova
 ./set-config.py $CONF_FILE keystone_authtoken admin_password                $KEYSTONE_SERVICE_PASSWORD
-./set-config.py $CONF_FILE DEFAULT            glance_host                   $GLANCE_HOST_IP
+./set-config.py $CONF_FILE glance             host                          $GLANCE_HOST_IP
 
 ./set-config.py $CONF_FILE DEFAULT            my_ip                         $COMPUTE_NODE_NOVA_MY_IP
 ./set-config.py $CONF_FILE DEFAULT            vnc_enabled                   True
 ./set-config.py $CONF_FILE DEFAULT            vncserver_listen              0.0.0.0
 ./set-config.py $CONF_FILE DEFAULT            vncserver_proxyclient_address $COMPUTE_NODE_VNCSERVER_PROXYCLIENT_ADDRESS
 ./set-config.py $CONF_FILE DEFAULT            novncproxy_base_url           http://$CONTROLLER_NODE_EXTERNAL_NET_IP:6080/vnc_auto.html
+./set-config.py $CONF_FILE DEFAULT            verbose                       True
 
 if [ $NETWORK_API_CLASS = 'nova-network' ]; then
     echo "NETWORK_API_CLASS = nova-network"
