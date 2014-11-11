@@ -8,10 +8,11 @@ date
 #Install nova components
 apt-get install -y nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient
 
-rm /var/lib/nova/nova.sqlite
-
 #Modify conf files
 ./controller-node-nova-modify-conf-files.sh
+
+#Remove the SQLite database file
+rm -f /var/lib/nova/nova.sqlite
 
 if [ $FIRST_NOVA_NODE = 'Yes' ]; then
     echo "FIRST_NOVA_NODE = Yes"
