@@ -5,16 +5,19 @@ source ./env.sh
 echo "Begin time of controller-node-neutron-install:"
 date
 
-if [ $FIRST_NEUTRON_NODE = 'Yes' ]; then
-    #Create Neutron Service and Endpoint if not exist
-    ./create-neutron-service-endpoint.sh
-fi
-
 #To install the Networking components
-apt-get -y install neutron-common neutron-server neutron-plugin-ml2
+apt-get -y install neutron-common neutron-server neutron-plugin-ml2 python-neutronclient
 
 #Modify conf files
 ./controller-node-neutron-modify-conf-files.sh
+
+if [ $FIRST_NEUTRON_NODE = 'Yes' ]; then
+    #Create Neutron Service and Endpoint if not exist
+    ./create-neutron-service-endpoint.sh
+
+    #Populate the database
+    su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade juno" neutron
+fi
 
 #Accept udp port 4789 when use vxlan
 if [ $TENANT_NETWORK_TYPES = 'vxlan' ]; then
