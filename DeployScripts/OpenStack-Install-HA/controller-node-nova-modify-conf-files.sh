@@ -46,8 +46,8 @@ elif [ $NETWORK_API_CLASS = 'neutron' ]; then
     ./set-config.py $CONF_FILE neutron admin_tenant_name                     service
     ./set-config.py $CONF_FILE neutron admin_username                        neutron
     ./set-config.py $CONF_FILE neutron admin_password                        $KEYSTONE_SERVICE_PASSWORD
-    ./set-config.py $CONF_FILE DEFAULT service_neutron_metadata_proxy        true
-    ./set-config.py $CONF_FILE DEFAULT neutron_metadata_proxy_shared_secret  $METADATA_PROXY_SHARED_SECRET
+    ./set-config.py $CONF_FILE neutron service_metadata_proxy                True
+    ./set-config.py $CONF_FILE neutron metadata_proxy_shared_secret          $METADATA_PROXY_SHARED_SECRET
 
     #
 else
