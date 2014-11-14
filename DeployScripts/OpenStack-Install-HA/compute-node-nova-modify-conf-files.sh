@@ -56,17 +56,17 @@ elif [ $NETWORK_API_CLASS = 'neutron' ]; then
     echo "NETWORK_API_CLASS = neutron"
 
     ./set-config.py $CONF_FILE DEFAULT network_api_class                     nova.network.neutronv2.api.API
-    ./set-config.py $CONF_FILE DEFAULT neutron_url                           http://$CONTROLLER_NODE_MANAGEMENT_IP:9696
-    ./set-config.py $CONF_FILE DEFAULT neutron_auth_strategy                 keystone
-    ./set-config.py $CONF_FILE DEFAULT neutron_admin_tenant_name             service
-    ./set-config.py $CONF_FILE DEFAULT neutron_admin_username                neutron
-    ./set-config.py $CONF_FILE DEFAULT neutron_admin_password                $KEYSTONE_SERVICE_PASSWORD
-    ./set-config.py $CONF_FILE DEFAULT neutron_admin_auth_url                http://$KEYSTONE_HOST_IP:35357/v2.0
+    ./set-config.py $CONF_FILE DEFAULT security_group_api                    neutron
     ./set-config.py $CONF_FILE DEFAULT linuxnet_interface_driver             nova.network.linux_net.LinuxOVSInterfaceDriver
     ./set-config.py $CONF_FILE DEFAULT firewall_driver                       nova.virt.firewall.NoopFirewallDriver
-    ./set-config.py $CONF_FILE DEFAULT security_group_api                    neutron
-   #./set-config.py $CONF_FILE DEFAULT service_neutron_metadata_proxy        true
-   #./set-config.py $CONF_FILE DEFAULT neutron_metadata_proxy_shared_secret  $METADATA_PROXY_SHARED_SECRET
+    ./set-config.py $CONF_FILE neutron url                                   http://$CONTROLLER_NODE_MANAGEMENT_IP:9696
+    ./set-config.py $CONF_FILE neutron auth_strategy                         keystone
+    ./set-config.py $CONF_FILE neutron admin_auth_url                        http://$KEYSTONE_HOST_IP:35357/v2.0
+    ./set-config.py $CONF_FILE neutron admin_tenant_name                     service
+    ./set-config.py $CONF_FILE neutron admin_username                        neutron
+    ./set-config.py $CONF_FILE neutron admin_password                        $KEYSTONE_SERVICE_PASSWORD
+#   ./set-config.py $CONF_FILE DEFAULT service_neutron_metadata_proxy        true
+#   ./set-config.py $CONF_FILE DEFAULT neutron_metadata_proxy_shared_secret  $METADATA_PROXY_SHARED_SECRET
 
     #
 else
