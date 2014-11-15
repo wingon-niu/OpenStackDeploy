@@ -67,9 +67,9 @@ if [ "$CINDER_STORAGE" = "ceph" ]; then
     chown cinder:cinder /etc/ceph/ceph.client.cinder-backup.keyring
 else
     echo "CINDER_STORAGE = local_disk"
-    ./del-config.py $conf_file_02 DEFAULT        volume_driver
-    ./del-config.py $conf_file_02 DEFAULT        backup_driver
-    ./del-config.py $conf_file_02 DEFAULT        host
+#   ./del-config.py $conf_file_02 DEFAULT        volume_driver
+#   ./del-config.py $conf_file_02 DEFAULT        backup_driver
+#   ./del-config.py $conf_file_02 DEFAULT        host
 fi
 
 #sed -i '/DEFAULT/,$d' $conf_file_02
