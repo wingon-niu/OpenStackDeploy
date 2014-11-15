@@ -81,20 +81,20 @@ fi
 
 if [ "$NOVA_STORAGE" = "ceph" ]; then
     echo "NOVA_STORAGE = ceph"
-    ./set-config.py $CONF_FILE DEFAULT libvirt_images_type           rbd
-    ./set-config.py $CONF_FILE DEFAULT libvirt_images_rbd_pool       vms
-    ./set-config.py $CONF_FILE DEFAULT libvirt_images_rbd_ceph_conf  /etc/ceph/ceph.conf
-    ./set-config.py $CONF_FILE DEFAULT rbd_user                      cinder
-    ./set-config.py $CONF_FILE DEFAULT rbd_secret_uuid               $(cat ./uuid.txt | awk '{print $1}')
-    ./set-config.py $CONF_FILE DEFAULT libvirt_inject_password       false
-    ./set-config.py $CONF_FILE DEFAULT libvirt_inject_key            false
-    ./set-config.py $CONF_FILE DEFAULT libvirt_inject_partition      -2
-    ./set-config.py $CONF_FILE DEFAULT libvirt_live_migration_flag   "VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST"
+    ./set-config.py  $CONF_FILE  libvirt  images_type           rbd
+    ./set-config.py  $CONF_FILE  libvirt  images_rbd_pool       vms
+    ./set-config.py  $CONF_FILE  libvirt  images_rbd_ceph_conf  /etc/ceph/ceph.conf
+    ./set-config.py  $CONF_FILE  libvirt  rbd_user              cinder
+    ./set-config.py  $CONF_FILE  libvirt  rbd_secret_uuid       $(cat ./uuid.txt | awk '{print $1}')
+    ./set-config.py  $CONF_FILE  libvirt  inject_password       false
+    ./set-config.py  $CONF_FILE  libvirt  inject_key            false
+    ./set-config.py  $CONF_FILE  libvirt  inject_partition      -2
+    ./set-config.py  $CONF_FILE  libvirt  live_migration_flag   "VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST"
     virsh secret-define --file ./secret.xml
     virsh secret-set-value --secret $(cat ./uuid.txt | awk '{print $1}') --base64 $(cat ./client.cinder.key)
 else
     echo "NOVA_STORAGE = local_disk"
-    ./del-config.py $CONF_FILE DEFAULT libvirt_images_type
+#   ./del-config.py  $CONF_FILE  libvirt  images_type
 fi
 
 #Modify the /etc/nova/nova-compute.conf
