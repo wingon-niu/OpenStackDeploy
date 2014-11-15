@@ -45,12 +45,18 @@ if [ $NETWORK_API_CLASS = 'nova-network' ]; then
     ./set-config.py $CONF_FILE DEFAULT public_interface       $PUBLIC_INTERFACE
 
     if [ $NETWORK_MANAGER = 'FlatDHCPManager' ]; then
+        echo "NETWORK_MANAGER = FlatDHCPManager"
+
         ./set-config.py $CONF_FILE DEFAULT flat_network_bridge    $FLAT_NETWORK_BRIDGE
         ./set-config.py $CONF_FILE DEFAULT flat_interface         $FLAT_INTERFACE
+
     elif [ $NETWORK_MANAGER = 'VlanManager' ]; then
+        echo "NETWORK_MANAGER = VlanManager"
+
         ./set-config.py $CONF_FILE DEFAULT vlan_interface         $VLAN_INTERFACE
+
     else
-        echo ""
+        echo "NETWORK_MANAGER = unknown type"
     fi
 elif [ $NETWORK_API_CLASS = 'neutron' ]; then
     echo "NETWORK_API_CLASS = neutron"
