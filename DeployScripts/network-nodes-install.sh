@@ -19,8 +19,9 @@ PREFIX_NETWORK_CONF=$($CMD_PATH/get-max-prefix.sh $DST_PATH Network-Conf.txt)
 MY_NETWORK_API_CLASS=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_NETWORK_CONF-Network-Conf.txt Network-api-class)
 if [ $MY_NETWORK_API_CLASS = 'neutron' ]; then
     echo "Network-api-class = neutron"
-    echo "All network nodes will auto reboot after installation."
-    MY_COMMAND=run-on-node-reboot.expect
+#   echo "All network nodes will auto reboot after installation."
+#   MY_COMMAND=run-on-node-reboot.expect
+    MY_COMMAND=run-on-node.expect
 else
     echo "Network-api-class = nova-network"
     MY_COMMAND=run-on-node.expect
@@ -35,11 +36,15 @@ done
 
 $CMD_PATH/check-screen-ended.sh
 echo $STR_COMPLETE_NETWORK_NODES_INSTALL
+sleep 5
 $CMD_PATH/check-servers-running.sh $CONF_DEPLOY_DIR/Network-Nodes-IPs.txt 30
 
 echo $STR_GET_LOG_FILE_FROM_SERVERS
 for IP in $(cat $CONF_DEPLOY_DIR/Network-Nodes-IPs.txt); do
     rsync -va $IP:/root/OpenStack-Install-HA/log/$RUN_DATE-network-node-install-$IP.log $CMD_PATH/log/
+    rsync -va $IP:/root/OpenStack-Install-HA/log/ovs-install.log                        ./
+    cat   ./ovs-install.log   >>   $CMD_PATH/log/$RUN_DATE-network-node-install-$IP.log
+    rm -f ./ovs-install.log
 done
 
 #
