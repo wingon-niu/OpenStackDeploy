@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd /root/OpenStack-Install-HA
 source ./env.sh
 
 if [ $(cat /etc/network/interfaces | grep br-ex | wc -l) -ne 0 ]; then
@@ -20,5 +21,7 @@ echo 'up ifconfig $IFACE 0.0.0.0 up'                         >> $CONF_FILE
 echo 'up ip link set $IFACE promisc on'                      >> $CONF_FILE
 echo 'down ip link set $IFACE promisc off'                   >> $CONF_FILE
 echo 'down ifconfig $IFACE down'                             >> $CONF_FILE
+
+#
 
 exit 0

@@ -33,9 +33,8 @@ fi
 service openvswitch-switch restart
 ovs-vsctl add-br br-int
 ovs-vsctl add-br br-ex
-./network-node-set-ip-for-br-ex.sh
-sleep 5
-ovs-vsctl add-port br-ex $EXTERNAL_NETWORK_INTERFACE_NAME;shutdown -r now;
+sleep 1
+nohup /root/OpenStack-Install-HA/network-node-ovs-install.sh > /root/OpenStack-Install-HA/log/ovs-install.log 2>&1 &
 
 ### Depending on your network interface driver, you may need to disable
 ### Generic Receive Offload (GRO) to achieve suitable throughput between
@@ -54,4 +53,4 @@ ovs-vsctl add-port br-ex $EXTERNAL_NETWORK_INTERFACE_NAME;shutdown -r now;
 #echo "End time of network-node-neutron-install:"
 #date
 
-#exit 0
+exit 0
