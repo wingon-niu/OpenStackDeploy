@@ -47,11 +47,12 @@ screen   -S niu -U -X screen   -U -t $IP $CMD_PATH/run-on-node.expect $IP contro
 $CMD_PATH/check-screen-ended.sh
 
 #Sync /var/lib/rabbitmq/.erlang.cookie
-ssh root@${G_CONTROLLER_NODE_IPS[1]} "rm -f /var/lib/rabbitmq/.erlang.cookie"
-ssh root@${G_CONTROLLER_NODE_IPS[2]} "rm -f /var/lib/rabbitmq/.erlang.cookie"
-rsync -va root@${G_CONTROLLER_NODE_IPS[0]}:/var/lib/rabbitmq/.erlang.cookie $CMD_PATH/
-rsync -va $CMD_PATH/.erlang.cookie root@${G_CONTROLLER_NODE_IPS[1]}:/var/lib/rabbitmq/
-rsync -va $CMD_PATH/.erlang.cookie root@${G_CONTROLLER_NODE_IPS[2]}:/var/lib/rabbitmq/
+#ssh root@${G_CONTROLLER_NODE_IPS[1]} "rm -f /var/lib/rabbitmq/.erlang.cookie"
+#ssh root@${G_CONTROLLER_NODE_IPS[2]} "rm -f /var/lib/rabbitmq/.erlang.cookie"
+rsync -vaI root@${G_CONTROLLER_NODE_IPS[0]}:/var/lib/rabbitmq/.erlang.cookie $CMD_PATH/
+rsync -vaI $CMD_PATH/.erlang.cookie root@${G_CONTROLLER_NODE_IPS[1]}:/var/lib/rabbitmq/
+rsync -vaI $CMD_PATH/.erlang.cookie root@${G_CONTROLLER_NODE_IPS[2]}:/var/lib/rabbitmq/
+rm -f      $CMD_PATH/.erlang.cookie
 ssh root@${G_CONTROLLER_NODE_IPS[1]} "chown rabbitmq:rabbitmq /var/lib/rabbitmq/.erlang.cookie"
 ssh root@${G_CONTROLLER_NODE_IPS[2]} "chown rabbitmq:rabbitmq /var/lib/rabbitmq/.erlang.cookie"
 
