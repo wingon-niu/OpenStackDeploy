@@ -63,6 +63,7 @@ if [ "$CINDER_STORAGE" = "ceph" ]; then
     ./set-config.py $conf_file_02 DEFAULT        backup_ceph_stripe_count          0
     ./set-config.py $conf_file_02 DEFAULT        restore_discard_excess_bytes      true
     ./set-config.py $conf_file_02 DEFAULT        host                              ceph_rbd
+    sed  -i  "s/enabled_backends=/#enabled_backends=/g"  $conf_file_02
     chown cinder:cinder /etc/ceph/ceph.client.cinder.keyring
     chown cinder:cinder /etc/ceph/ceph.client.cinder-backup.keyring
 else
