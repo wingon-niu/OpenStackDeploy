@@ -1,5 +1,8 @@
 #!/bin/bash
 
+MY_HOST_NAME=$(hostname)
+echo "Now running network-node-ovs-uninstall on $MY_HOST_NAME"
+
 cd /root/OpenStack-Install-HA
 source ./env.sh
 
