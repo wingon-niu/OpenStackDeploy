@@ -70,8 +70,25 @@ for MY_IP in $(cat $CONF_DEPLOY_DIR/Front-Nodes-IPs.txt); do
 done
 
 #If used ceph, undeploy ceph cluster.
+PREFIX_STORAGE=$($CMD_PATH/get-max-prefix.sh   $DST_PATH  Storage.txt)
+MY_GLANCE_STORAGE=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_STORAGE-Storage.txt GLANCE_STORAGE)
+MY_CINDER_STORAGE=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_STORAGE-Storage.txt CINDER_STORAGE)
+MY_NOVA_STORAGE=$($CMD_PATH/get-conf-data.sh   $DST_PATH/$PREFIX_STORAGE-Storage.txt NOVA_STORAGE)
+
+if [ "$MY_GLANCE_STORAGE" = "ceph" -o "$MY_CINDER_STORAGE" = "ceph" -o "$MY_NOVA_STORAGE" = "ceph" ]; then
+    echo "Undeploying Ceph Cluster..."
+    MY_IP=$(head -n 1 ./Ceph-Install/conf/ceph-admin-node-ext-ip.txt)
+    ssh root@$MY_IP "cd /root/Ceph-Install;./ceph-undeploy.sh 2>&1 | tee ./log/$RUN_DATE-ceph-undeploy.log;"
+
+    echo "Delete host info in /etc/hosts on all ceph nodes..."
+    #
+fi
 
 #Delete host info in /etc/hosts on controller nodes.
+
+#
+
+echo "Undeploy completed."
 
 #
 
