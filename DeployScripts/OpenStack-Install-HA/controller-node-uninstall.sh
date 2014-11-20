@@ -7,4 +7,12 @@ echo "Now running controller node uninstall on $MY_HOST_NAME"
 
 #
 
+./uninstall-all-openstack-components.sh
+
+#Uninstall RabbitMQ
+
+#Uninstall Mysql Galera
+
+#
+
 exit 0
