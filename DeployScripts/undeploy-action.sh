@@ -81,7 +81,20 @@ if [ "$MY_GLANCE_STORAGE" = "ceph" -o "$MY_CINDER_STORAGE" = "ceph" -o "$MY_NOVA
     ssh root@$MY_IP "cd /root/Ceph-Install;./ceph-undeploy.sh 2>&1 | tee ./log/$RUN_DATE-ceph-undeploy.log;"
 
     echo "Delete host info in /etc/hosts on all ceph nodes..."
-    #
+    for MY_IP in $(cat ./Ceph-Install/conf/ceph-client-server-nodes-ext-ip.txt); do
+        echo $MY_IP
+        rsync -vaI root@$MY_IP:/etc/hosts ./
+        ./Ceph-Install/delete-file2-in-file1.sh ./hosts ./Ceph-Install/conf/ceph-server-nodes-hosts.txt
+        rsync -vaI ./hosts root@$MY_IP:/etc/
+    done
+    for MY_IP in $(cat ./Ceph-Install/conf/ceph-admin-node-ext-ip.txt); do
+        echo $MY_IP
+        rsync -vaI root@$MY_IP:/etc/hosts ./
+        ./Ceph-Install/delete-file2-in-file1.sh ./hosts ./Ceph-Install/conf/ceph-server-nodes-hosts.txt
+        ./Ceph-Install/delete-file2-in-file1.sh ./hosts ./Ceph-Install/conf/ceph-client-nodes-hosts.txt
+        rsync -vaI ./hosts root@$MY_IP:/etc/
+    done
+    rm -f ./hosts
 fi
 
 #Delete host info in /etc/hosts on controller nodes.
