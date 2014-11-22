@@ -141,10 +141,12 @@ if [ "$MY_GLANCE_STORAGE" = "ceph" -o "$MY_CINDER_STORAGE" = "ceph" -o "$MY_NOVA
     #Generate ceph client and server nodes ext ip file
     rm -f ./Ceph-Install/conf/ceph-client-server-nodes-ext-ip.txt
     touch ./Ceph-Install/conf/ceph-client-server-nodes-ext-ip.txt
-    for server_name in $(cat ./Ceph-Install/conf/ceph-client-nodes.txt); do
-        MY_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_EXT_NET_NIC_NAME)
-        echo $MY_IP >> ./Ceph-Install/conf/ceph-client-server-nodes-ext-ip.txt
-    done
+    if [ $(cat ./Ceph-Install/conf/ceph-client-nodes.txt | wc -l) -gt 0 ]; then
+        for server_name in $(cat ./Ceph-Install/conf/ceph-client-nodes.txt); do
+            MY_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_EXT_NET_NIC_NAME)
+            echo $MY_IP >> ./Ceph-Install/conf/ceph-client-server-nodes-ext-ip.txt
+        done
+    fi
     for server_name in $(cat ./Ceph-Install/conf/ceph-server-nodes.txt); do
         MY_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_EXT_NET_NIC_NAME)
         echo $MY_IP >> ./Ceph-Install/conf/ceph-client-server-nodes-ext-ip.txt
@@ -152,11 +154,13 @@ if [ "$MY_GLANCE_STORAGE" = "ceph" -o "$MY_CINDER_STORAGE" = "ceph" -o "$MY_NOVA
 
     #Generate ceph client nodes hosts file
     echo "#Used for ceph"  > ./Ceph-Install/conf/ceph-client-nodes-hosts.txt
-    for server_name in $(cat ./Ceph-Install/conf/ceph-client-nodes.txt); do
-        MY_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_ADMIN_NET_NIC_NAME)
-        MY_HOSTNAME=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_SERVER_INFO-Server-Info.txt ${server_name}-hostname)
-        echo "$MY_IP  $MY_HOSTNAME" >> ./Ceph-Install/conf/ceph-client-nodes-hosts.txt
-    done
+    if [ $(cat ./Ceph-Install/conf/ceph-client-nodes.txt | wc -l) -gt 0 ]; then
+        for server_name in $(cat ./Ceph-Install/conf/ceph-client-nodes.txt); do
+            MY_IP=$($CMD_PATH/get-ip-by-server-nic-name.sh $DST_PATH $PREFIX_SERVER_INFO-Server-Info.txt $server_name $CEPH_ADMIN_NET_NIC_NAME)
+            MY_HOSTNAME=$($CMD_PATH/get-conf-data.sh $DST_PATH/$PREFIX_SERVER_INFO-Server-Info.txt ${server_name}-hostname)
+            echo "$MY_IP  $MY_HOSTNAME" >> ./Ceph-Install/conf/ceph-client-nodes-hosts.txt
+        done
+    fi
 
     #Generate ceph server nodes hosts file
     echo "#Used for ceph"  > ./Ceph-Install/conf/ceph-server-nodes-hosts.txt
@@ -199,9 +203,11 @@ if [ "$MY_GLANCE_STORAGE" = "ceph" -o "$MY_CINDER_STORAGE" = "ceph" -o "$MY_NOVA
     #Generate ceph client nodes hostname info file
     rm -f ./Ceph-Install/conf/ceph-client-hostname-info.txt
     touch ./Ceph-Install/conf/ceph-client-hostname-info.txt
-    for host_name in $(cat ./Ceph-Install/conf/ceph-client-nodes-hosts.txt | grep -v '#' | awk '{print $2}'); do
-        echo "aaa bbb $host_name" >> ./Ceph-Install/conf/ceph-client-hostname-info.txt
-    done
+    if [ $(cat ./Ceph-Install/conf/ceph-client-nodes-hosts.txt | grep -v '#' | wc -l) -gt 0 ]; then
+        for host_name in $(cat ./Ceph-Install/conf/ceph-client-nodes-hosts.txt | grep -v '#' | awk '{print $2}'); do
+            echo "aaa bbb $host_name" >> ./Ceph-Install/conf/ceph-client-hostname-info.txt
+        done
+    fi
 
     #Generate ceph server nodes hostname info file
     rm -f ./Ceph-Install/conf/ceph-server-hostname-info.txt
