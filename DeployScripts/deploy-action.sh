@@ -220,6 +220,22 @@ if [ "$MY_GLANCE_STORAGE" = "ceph" -o "$MY_CINDER_STORAGE" = "ceph" -o "$MY_NOVA
 fi
 #End if use ceph
 
+#Use local openstack and ceph apt sources if exists
+if [ -s ./sources.list.openstack ]; then
+    REPO_1="http://ubuntu-cloud.archive.canonical.com/ubuntu trusty-updates/juno main"
+    REPO_2=${REPO_1//\//\\\/}
+    REPO_3=$(head -n 1 ./sources.list.openstack)
+    REPO_4=${REPO_3//\//\\\/}
+    sed -i "s/$REPO_2/$REPO_4/g" ./OpenStack-Install-HA/node-3-preparing-openstack.sh
+fi
+if [ -s ./sources.list.ceph ]; then
+    REPO_1="http://ceph.com/debian-firefly/ trusty main"
+    REPO_2=${REPO_1//\//\\\/}
+    REPO_3=$(head -n 1 ./sources.list.ceph)
+    REPO_4=${REPO_3//\//\\\/}
+    sed -i "s/$REPO_2/$REPO_4/g" ./Ceph-Install/ceph-install-part-1.sh
+fi
+
 #Copy files to servers
 mkdir -p $CMD_PATH/log
 echo $STR_PING_ALL_SERVERS
