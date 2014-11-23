@@ -97,9 +97,21 @@ if [ "$MY_GLANCE_STORAGE" = "ceph" -o "$MY_CINDER_STORAGE" = "ceph" -o "$MY_NOVA
     rm -f ./hosts
 fi
 
-#Delete host info in /etc/hosts on controller nodes.
+echo "Delete message queue host info in /etc/hosts on controller nodes..."
+echo $STR_PING_ALL_SERVERS
+$CMD_PATH/check-servers-running.sh $CONF_DEPLOY_DIR/Controller-Nodes-IPs.txt 10
+for MY_IP in $(cat $CONF_DEPLOY_DIR/Controller-Nodes-IPs.txt); do
+    echo "Connecting to $MY_IP"
+    ssh root@$MY_IP "cd /root/OpenStack-Install-HA;./del-mq-hosts-info.sh 2>&1 | tee ./log/$RUN_DATE-del-mq-hosts-info.log;"
+done
 
-#
+echo "Delete install files on all servers..."
+echo $STR_PING_ALL_SERVERS
+$CMD_PATH/check-servers-running.sh $CONF_DEPLOY_DIR/Servers-IPs.txt 10
+for MY_IP in $(cat $CONF_DEPLOY_DIR/Servers-IPs.txt); do
+    echo "Connecting to $MY_IP"
+    ssh root@$MY_IP "cd /root;rm -rf ./OpenStack-Install-HA;rm -rf ./Ceph-Install;cd /etc/apt/sources.list.d;rm -f ./cloudarchive-juno.list;rm -f ./ceph.list;"
+done
 
 echo "Undeploy completed."
 
