@@ -24,7 +24,7 @@ service openvswitch-switch stop
 
 apt-get -y remove \
            keystone python-keystoneclient \
-           glance python-glanceclient \
+           glance-common glance glance-api glance-registry python-glanceclient \
            cinder-api cinder-scheduler python-cinderclient cinder-volume \
            openstack-dashboard apache2 libapache2-mod-wsgi memcached python-memcache \
            nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient \
@@ -35,7 +35,7 @@ apt-get -y remove \
 
 apt-get -y autoremove \
            keystone python-keystoneclient \
-           glance python-glanceclient \
+           glance-common glance glance-api glance-registry python-glanceclient \
            cinder-api cinder-scheduler python-cinderclient cinder-volume \
            openstack-dashboard apache2 libapache2-mod-wsgi memcached python-memcache \
            nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient \

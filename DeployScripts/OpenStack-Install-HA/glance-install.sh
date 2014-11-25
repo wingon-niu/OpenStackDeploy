@@ -6,7 +6,7 @@ echo "Begin time of glance-install:"
 date
 
 #Glance installation
-apt-get install -y glance python-glanceclient
+apt-get install -y glance-common glance glance-api glance-registry python-glanceclient
 
 if [ "$GLANCE_STORAGE" = "ceph" ]; then
     echo "GLANCE_STORAGE = ceph"
