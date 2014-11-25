@@ -6,7 +6,7 @@ echo "Begin time of compute-node-nova-install:"
 date
 
 #Install the Compute packages
-apt-get install -y nova-compute sysfsutils
+apt-get install -y nova-common nova-compute sysfsutils
 
 #---if [ $COMPUTE_NODE_LIBVIRT_TYPE = 'kvm' ]; then
 #---    echo "COMPUTE_NODE_LIBVIRT_TYPE = kvm"

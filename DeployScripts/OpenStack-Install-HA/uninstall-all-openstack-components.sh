@@ -28,7 +28,7 @@ apt-get -y remove \
            cinder-common cinder-api cinder-scheduler python-cinderclient cinder-volume \
            openstack-dashboard apache2 libapache2-mod-wsgi memcached python-memcache \
            nova-common nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient \
-           nova-compute \
+           nova-compute nova-compute-kvm \
            nova-network nova-api-metadata \
            neutron-common neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent \
            neutron-server python-neutronclient
@@ -39,7 +39,7 @@ apt-get -y autoremove \
            cinder-common cinder-api cinder-scheduler python-cinderclient cinder-volume \
            openstack-dashboard apache2 libapache2-mod-wsgi memcached python-memcache \
            nova-common nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient \
-           nova-compute \
+           nova-compute nova-compute-kvm \
            nova-network nova-api-metadata \
            neutron-common neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent \
            neutron-server python-neutronclient \

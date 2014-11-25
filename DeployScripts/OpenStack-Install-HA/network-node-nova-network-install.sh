@@ -3,7 +3,7 @@
 source ./env.sh
 
 #Install networking components
-apt-get install -y nova-network nova-api-metadata
+apt-get install -y nova-common nova-network nova-api-metadata
 
 #
 
