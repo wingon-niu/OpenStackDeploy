@@ -7,7 +7,7 @@ date
 
 #Install the required packages
 #apt-get install -y iscsitarget open-iscsi iscsitarget-dkms
-apt-get install -y cinder-api cinder-scheduler python-cinderclient
+apt-get install -y cinder-common cinder-api cinder-scheduler python-cinderclient
 apt-get install -y lvm2 cinder-volume python-mysqldb
 
 if [ "$CINDER_STORAGE" = "ceph" ]; then
