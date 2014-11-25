@@ -6,7 +6,7 @@ echo "Begin time of controller-node-nova-install:"
 date
 
 #Install nova components
-apt-get install -y nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient
+apt-get install -y nova-common nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient
 
 #Modify conf files
 ./controller-node-nova-modify-conf-files.sh

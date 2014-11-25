@@ -27,7 +27,7 @@ apt-get -y remove \
            glance-common glance glance-api glance-registry python-glanceclient \
            cinder-common cinder-api cinder-scheduler python-cinderclient cinder-volume \
            openstack-dashboard apache2 libapache2-mod-wsgi memcached python-memcache \
-           nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient \
+           nova-common nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient \
            nova-compute \
            nova-network nova-api-metadata \
            neutron-common neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent \
@@ -38,7 +38,7 @@ apt-get -y autoremove \
            glance-common glance glance-api glance-registry python-glanceclient \
            cinder-common cinder-api cinder-scheduler python-cinderclient cinder-volume \
            openstack-dashboard apache2 libapache2-mod-wsgi memcached python-memcache \
-           nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient \
+           nova-common nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient \
            nova-compute \
            nova-network nova-api-metadata \
            neutron-common neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent \
