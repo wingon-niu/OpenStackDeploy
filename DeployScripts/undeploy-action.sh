@@ -31,7 +31,7 @@ if [ "$MY_NETWORK_API_CLASS" = "neutron" ]; then
     echo $STR_PING_ALL_SERVERS
     $CMD_PATH/check-servers-running.sh $CONF_DEPLOY_DIR/Network-Nodes-IPs.txt 10
     for MY_IP in $(cat $CONF_DEPLOY_DIR/Network-Nodes-IPs.txt); do
-        echo "Connecting to $MY_IP"
+        echo "Connecting to network node: $MY_IP"
         ssh root@$MY_IP "nohup /root/OpenStack-Install-HA/network-node-ovs-uninstall.sh > /root/OpenStack-Install-HA/log/network-node-ovs-uninstall.log 2>&1 &"
         echo "Done."
     done
@@ -41,32 +41,36 @@ echo "Undeploying Computer Nodes..."
 echo $STR_PING_ALL_SERVERS
 $CMD_PATH/check-servers-running.sh $CONF_DEPLOY_DIR/Computer-Nodes-IPs.txt 10
 for MY_IP in $(cat $CONF_DEPLOY_DIR/Computer-Nodes-IPs.txt); do
-    echo "Connecting to $MY_IP"
-    ssh root@$MY_IP "cd /root/OpenStack-Install-HA;./compute-node-uninstall.sh 2>&1 | tee ./log/$RUN_DATE-compute-node-uninstall.log;"
+    echo "Connecting to compute node: $MY_IP"
+#   ssh root@$MY_IP "cd /root/OpenStack-Install-HA;./compute-node-uninstall.sh 2>&1 | tee ./log/$RUN_DATE-compute-node-uninstall.log;"
+    $CMD_PATH/run-on-node.expect $MY_IP compute-node-uninstall.sh $RUN_DATE-compute-node-uninstall.log
 done
 
 echo "Undeploying Network Nodes..."
 echo $STR_PING_ALL_SERVERS
 $CMD_PATH/check-servers-running.sh $CONF_DEPLOY_DIR/Network-Nodes-IPs.txt 10
 for MY_IP in $(cat $CONF_DEPLOY_DIR/Network-Nodes-IPs.txt); do
-    echo "Connecting to $MY_IP"
-    ssh root@$MY_IP "cd /root/OpenStack-Install-HA;./network-node-uninstall.sh 2>&1 | tee ./log/$RUN_DATE-network-node-uninstall.log;"
+    echo "Connecting to network node: $MY_IP"
+#   ssh root@$MY_IP "cd /root/OpenStack-Install-HA;./network-node-uninstall.sh 2>&1 | tee ./log/$RUN_DATE-network-node-uninstall.log;"
+    $CMD_PATH/run-on-node.expect $MY_IP network-node-uninstall.sh $RUN_DATE-network-node-uninstall.log
 done
 
 echo "Undeploying Controller Nodes..."
 echo $STR_PING_ALL_SERVERS
 $CMD_PATH/check-servers-running.sh $CONF_DEPLOY_DIR/Controller-Nodes-IPs.txt 10
 for MY_IP in $(cat $CONF_DEPLOY_DIR/Controller-Nodes-IPs.txt); do
-    echo "Connecting to $MY_IP"
-    ssh root@$MY_IP "cd /root/OpenStack-Install-HA;./controller-node-uninstall.sh 2>&1 | tee ./log/$RUN_DATE-controller-node-uninstall.log;"
+    echo "Connecting to controller node: $MY_IP"
+#   ssh root@$MY_IP "cd /root/OpenStack-Install-HA;./controller-node-uninstall.sh 2>&1 | tee ./log/$RUN_DATE-controller-node-uninstall.log;"
+    $CMD_PATH/run-on-node.expect $MY_IP controller-node-uninstall.sh $RUN_DATE-controller-node-uninstall.log
 done
 
 echo "Undeploying Front Nodes..."
 echo $STR_PING_ALL_SERVERS
 $CMD_PATH/check-servers-running.sh $CONF_DEPLOY_DIR/Front-Nodes-IPs.txt 10
 for MY_IP in $(cat $CONF_DEPLOY_DIR/Front-Nodes-IPs.txt); do
-    echo "Connecting to $MY_IP"
-    ssh root@$MY_IP "cd /root/OpenStack-Install-HA;./front-node-uninstall.sh 2>&1 | tee ./log/$RUN_DATE-front-node-uninstall.log;"
+    echo "Connecting to front node: $MY_IP"
+#   ssh root@$MY_IP "cd /root/OpenStack-Install-HA;./front-node-uninstall.sh 2>&1 | tee ./log/$RUN_DATE-front-node-uninstall.log;"
+    $CMD_PATH/run-on-node.expect $MY_IP front-node-uninstall.sh $RUN_DATE-front-node-uninstall.log
 done
 
 #If used ceph, undeploy ceph cluster.
@@ -78,7 +82,9 @@ MY_NOVA_STORAGE=$($CMD_PATH/get-conf-data.sh   $DST_PATH/$PREFIX_STORAGE-Storage
 if [ "$MY_GLANCE_STORAGE" = "ceph" -o "$MY_CINDER_STORAGE" = "ceph" -o "$MY_NOVA_STORAGE" = "ceph" ]; then
     echo "Undeploying Ceph Cluster..."
     MY_IP=$(head -n 1 ./Ceph-Install/conf/ceph-admin-node-ext-ip.txt)
-    ssh root@$MY_IP "cd /root/Ceph-Install;./ceph-undeploy.sh 2>&1 | tee ./log/$RUN_DATE-ceph-undeploy.log;"
+    echo "Connecting to ceph admin node: $MY_IP"
+#   ssh root@$MY_IP "cd /root/Ceph-Install;./ceph-undeploy.sh 2>&1 | tee ./log/$RUN_DATE-ceph-undeploy.log;"
+    $CMD_PATH/run-on-ceph-node.expect $MY_IP ceph-undeploy.sh $RUN_DATE-ceph-undeploy.log
 
     echo "Delete host info in /etc/hosts on all ceph nodes..."
     for MY_IP in $(cat ./Ceph-Install/conf/ceph-client-server-nodes-ext-ip.txt); do
@@ -101,7 +107,7 @@ echo "Delete message queue host info in /etc/hosts on controller nodes..."
 echo $STR_PING_ALL_SERVERS
 $CMD_PATH/check-servers-running.sh $CONF_DEPLOY_DIR/Controller-Nodes-IPs.txt 10
 for MY_IP in $(cat $CONF_DEPLOY_DIR/Controller-Nodes-IPs.txt); do
-    echo "Connecting to $MY_IP"
+    echo "Connecting to controller node: $MY_IP"
     ssh root@$MY_IP "cd /root/OpenStack-Install-HA;./del-mq-hosts-info.sh 2>&1 | tee ./log/$RUN_DATE-del-mq-hosts-info.log;"
 done
 
