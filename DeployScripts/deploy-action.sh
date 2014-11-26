@@ -268,6 +268,10 @@ $CMD_PATH/network-nodes-install.sh $RUN_DATE
 #Installation on Computer Nodes
 $CMD_PATH/computer-nodes-install.sh $RUN_DATE
 
+#Restart all openstack services on all nodes
+$CMD_PATH/restart-all-openstack-services.sh
+$CMD_PATH/show-all-openstack-services-status.sh
+
 #Stop 2 services on last 2 controller nodes when not use ceph
 if [ "$MY_GLANCE_STORAGE" != "ceph" -o "$MY_CINDER_STORAGE" != "ceph" ]; then
     $CMD_PATH/stop-5-services-on-last-2-controller-nodes.sh
