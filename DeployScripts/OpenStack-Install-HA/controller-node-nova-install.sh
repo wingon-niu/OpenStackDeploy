@@ -23,8 +23,10 @@ else
     echo "FIRST_NOVA_NODE = No"
 fi
 
-#Restart Service Nova
-./restart-service-nova-api.sh
+# DO NOT restart Service Nova when use multi controller nodes, it will make "nova-manage db sync" failed on first controller node.
+# DO NOT restart Service Nova when use multi controller nodes, it will make "nova-manage db sync" failed on first controller node.
+# DO NOT restart Service Nova when use multi controller nodes, it will make "nova-manage db sync" failed on first controller node.
+# ./restart-service-nova-api.sh
 
 #Show Service Status
 ./show-service-status-nova-api.sh
