@@ -37,8 +37,10 @@ fi
 #Remove the SQLite database file
 rm -f /var/lib/nova/nova.sqlite
 
-#Restart the Compute service
-./restart-service-nova-compute.sh
+# DO NOT restart Service Nova when use multi controller nodes, it will make "nova-manage db sync" failed on first controller node.
+# DO NOT restart Service Nova when use multi controller nodes, it will make "nova-manage db sync" failed on first controller node.
+# DO NOT restart Service Nova when use multi controller nodes, it will make "nova-manage db sync" failed on first controller node.
+# ./restart-service-nova-compute.sh
 
 #Check service status
 ./show-service-status-nova-compute.sh
