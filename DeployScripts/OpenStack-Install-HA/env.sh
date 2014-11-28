@@ -192,5 +192,8 @@ CINDER_STORAGE=local_disk
 #Used for all computer nodes, set same value on each node, one of : local_disk, ceph.
 NOVA_STORAGE=local_disk
 
+#Used for all nodes, set same value on each node, one of : "./icehouse", "."(when juno).
+OPENSTACK_RELEASE=./icehouse
+
 
 

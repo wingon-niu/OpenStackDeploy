@@ -224,21 +224,31 @@ fi
 sed -i "/^KEYSTONE_ADMIN_TOKEN=/c                 KEYSTONE_ADMIN_TOKEN=$(uuidgen)" $DST_PATH/*-env.sh
 sed -i "/^METADATA_PROXY_SHARED_SECRET=/c METADATA_PROXY_SHARED_SECRET=$(uuidgen)" $DST_PATH/*-env.sh
 
-#Use local openstack and ceph apt sources if exists
-if [ -s ./sources.list.openstack ]; then
-    REPO_1="http://ubuntu-cloud.archive.canonical.com/ubuntu trusty-updates/juno main"
-    REPO_2=${REPO_1//\//\\\/}
-    REPO_3=$(head -n 1 ./sources.list.openstack)
-    REPO_4=${REPO_3//\//\\\/}
-    sed -i "s/$REPO_2/$REPO_4/g" ./OpenStack-Install-HA/node-3-preparing-openstack.sh
+#Select OpenStack release
+MY_OPENSTACK_RELEASE=$($CMD_PATH/get-conf-data.sh $CMD_PATH/openstack-release.txt Openstack_release)
+if [ "$MY_OPENSTACK_RELEASE" = "icehouse" ]; then
+    sed -i "/^OPENSTACK_RELEASE=/c OPENSTACK_RELEASE=.\/icehouse" $DST_PATH/*-env.sh
+elif [ "$MY_OPENSTACK_RELEASE" = "juno" ]; then
+    sed -i "/^OPENSTACK_RELEASE=/c OPENSTACK_RELEASE=."           $DST_PATH/*-env.sh
+else
+    echo "Error: OpenStack release $MY_OPENSTACK_RELEASE is not supported, please use icehouse or juno."
+    exit 1
 fi
-if [ -s ./sources.list.ceph ]; then
-    REPO_1="http://ceph.com/debian-firefly/ trusty main"
-    REPO_2=${REPO_1//\//\\\/}
-    REPO_3=$(head -n 1 ./sources.list.ceph)
-    REPO_4=${REPO_3//\//\\\/}
-    sed -i "s/$REPO_2/$REPO_4/g" ./Ceph-Install/ceph-install-part-1.sh
+rm -f ./OpenStack-Install-HA/openstack.list
+cp ./apt-sources/openstack-$MY_OPENSTACK_RELEASE.list ./OpenStack-Install-HA/openstack.list
+
+#Select Ceph release
+MY_CEPH_RELEASE=$($CMD_PATH/get-conf-data.sh $CMD_PATH/ceph-release.txt Ceph_release)
+if [ "$MY_CEPH_RELEASE" = "firefly" ]; then
+    DO_NOTHING="do_nothing"
+elif [ "$MY_CEPH_RELEASE" = "giant" ]; then
+    DO_NOTHING="do_nothing"
+else
+    echo "Error: Ceph release $MY_CEPH_RELEASE is not supported, please use firefly or giant."
+    exit 1
 fi
+rm -f ./Ceph-Install/ceph.list
+cp ./apt-sources/ceph-$MY_CEPH_RELEASE.list ./Ceph-Install/ceph.list
 
 #Copy files to servers
 mkdir -p $CMD_PATH/log
