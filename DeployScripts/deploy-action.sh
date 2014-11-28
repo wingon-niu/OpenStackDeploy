@@ -220,6 +220,10 @@ if [ "$MY_GLANCE_STORAGE" = "ceph" -o "$MY_CINDER_STORAGE" = "ceph" -o "$MY_NOVA
 fi
 #End if use ceph
 
+#Set needed uuid
+sed -i "/^KEYSTONE_ADMIN_TOKEN=/c                 KEYSTONE_ADMIN_TOKEN=$(uuidgen)" $DST_PATH/*-env.sh
+sed -i "/^METADATA_PROXY_SHARED_SECRET=/c METADATA_PROXY_SHARED_SECRET=$(uuidgen)" $DST_PATH/*-env.sh
+
 #Use local openstack and ceph apt sources if exists
 if [ -s ./sources.list.openstack ]; then
     REPO_1="http://ubuntu-cloud.archive.canonical.com/ubuntu trusty-updates/juno main"
