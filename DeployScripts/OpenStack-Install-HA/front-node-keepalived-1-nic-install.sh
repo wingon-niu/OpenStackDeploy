@@ -22,7 +22,7 @@ echo "}"                                                                     >> 
 echo ""                                                                      >> $CONF_FILE
 echo "vrrp_sync_group VG_1 {"                                                >> $CONF_FILE
 echo "    group {"                                                           >> $CONF_FILE
-###echo "        internal_net"                                                  >> $CONF_FILE
+###echo "     internal_net"                                                  >> $CONF_FILE
 echo "        external_net"                                                  >> $CONF_FILE
 echo "    }"                                                                 >> $CONF_FILE
 echo "    smtp_alert"                                                        >> $CONF_FILE
@@ -33,32 +33,32 @@ echo "    script \"/etc/keepalived/check_haproxy.sh\""                       >> 
 echo "    interval 10"                                                       >> $CONF_FILE
 echo "}"                                                                     >> $CONF_FILE
 echo ""                                                                      >> $CONF_FILE
-###echo "vrrp_instance internal_net {"                                          >> $CONF_FILE
-###echo "    state $KEEPALIVED_STATE"                                           >> $CONF_FILE
-###echo "    interface $KEEPALIVED_INTERNAL_NET_INTERFACE_NAME"                 >> $CONF_FILE
-####echo"    dont_track_primary"                                                >> $CONF_FILE
-###echo "    track_interface {"                                                 >> $CONF_FILE
-###echo "        $KEEPALIVED_INTERNAL_NET_INTERFACE_NAME"                       >> $CONF_FILE
-###echo "        $KEEPALIVED_EXTERNAL_NET_INTERFACE_NAME"                       >> $CONF_FILE
-###echo "    }"                                                                 >> $CONF_FILE
-###echo "    virtual_router_id $KEEPALIVED_INTERNAL_NET_VIRTUAL_ROUTER_ID"      >> $CONF_FILE
-###echo "    priority $KEEPALIVED_INTERNAL_NET_PRIORITY"                        >> $CONF_FILE
-###echo "    advert_int 1"                                                      >> $CONF_FILE
-###echo "    authentication {"                                                  >> $CONF_FILE
-###echo "        auth_type PASS"                                                >> $CONF_FILE
-###echo "        auth_pass paswrd123"                                           >> $CONF_FILE
-###echo "    }"                                                                 >> $CONF_FILE
-###echo "    virtual_ipaddress {"                                               >> $CONF_FILE
+###echo "vrrp_instance internal_net {"                                       >> $CONF_FILE
+###echo "    state $KEEPALIVED_STATE"                                        >> $CONF_FILE
+###echo "    interface $KEEPALIVED_INTERNAL_NET_INTERFACE_NAME"              >> $CONF_FILE
+####echo"    dont_track_primary"                                             >> $CONF_FILE
+###echo "    track_interface {"                                              >> $CONF_FILE
+###echo "        $KEEPALIVED_INTERNAL_NET_INTERFACE_NAME"                    >> $CONF_FILE
+###echo "        $KEEPALIVED_EXTERNAL_NET_INTERFACE_NAME"                    >> $CONF_FILE
+###echo "    }"                                                              >> $CONF_FILE
+###echo "    virtual_router_id $KEEPALIVED_INTERNAL_NET_VIRTUAL_ROUTER_ID"   >> $CONF_FILE
+###echo "    priority $KEEPALIVED_INTERNAL_NET_PRIORITY"                     >> $CONF_FILE
+###echo "    advert_int 1"                                                   >> $CONF_FILE
+###echo "    authentication {"                                               >> $CONF_FILE
+###echo "        auth_type PASS"                                             >> $CONF_FILE
+###echo "        auth_pass paswrd123"                                        >> $CONF_FILE
+###echo "    }"                                                              >> $CONF_FILE
+###echo "    virtual_ipaddress {"                                            >> $CONF_FILE
 ###echo "        $KEEPALIVED_INTERNAL_NET_VIRTUAL_IP/24 dev $KEEPALIVED_INTERNAL_NET_INTERFACE_NAME label $KEEPALIVED_INTERNAL_NET_INTERFACE_NAME:ka" >> $CONF_FILE
-###echo "    }"                                                                 >> $CONF_FILE
-###echo "}"                                                                     >> $CONF_FILE
-###echo ""                                                                      >> $CONF_FILE
+###echo "    }"                                                              >> $CONF_FILE
+###echo "}"                                                                  >> $CONF_FILE
+###echo ""                                                                   >> $CONF_FILE
 echo "vrrp_instance external_net {"                                          >> $CONF_FILE
 echo "    state $KEEPALIVED_STATE"                                           >> $CONF_FILE
 echo "    interface $KEEPALIVED_EXTERNAL_NET_INTERFACE_NAME"                 >> $CONF_FILE
 #echo"    dont_track_primary"                                                >> $CONF_FILE
 echo "    track_interface {"                                                 >> $CONF_FILE
-###echo "        $KEEPALIVED_INTERNAL_NET_INTERFACE_NAME"                       >> $CONF_FILE
+###echo "     $KEEPALIVED_INTERNAL_NET_INTERFACE_NAME"                       >> $CONF_FILE
 echo "        $KEEPALIVED_EXTERNAL_NET_INTERFACE_NAME"                       >> $CONF_FILE
 echo "    }"                                                                 >> $CONF_FILE
 echo "    virtual_router_id $KEEPALIVED_EXTERNAL_NET_VIRTUAL_ROUTER_ID"      >> $CONF_FILE

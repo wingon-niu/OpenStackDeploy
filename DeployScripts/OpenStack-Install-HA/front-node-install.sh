@@ -12,7 +12,7 @@ apt-get install -y libssl-dev openssl libpopt-dev mailutils sharutils sendmail r
 ./front-node-haproxy-install.sh
 
 #Install Keepalived
-if [ $KEEPALIVED_INTERNAL_NET_INTERFACE_NAME = $KEEPALIVED_EXTERNAL_NET_INTERFACE_NAME ]; then
+if [ "$KEEPALIVED_INTERNAL_NET_INTERFACE_NAME" = "$KEEPALIVED_EXTERNAL_NET_INTERFACE_NAME" ]; then
     echo "keepalived: 1 nic"
     ./front-node-keepalived-1-nic-install.sh
 else

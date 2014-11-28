@@ -115,7 +115,7 @@ echo "    balance source"                                                       
 echo "    mode    tcp"                                                                              >> $CONF_FILE
 echo "    option  tcplog"                                                                           >> $CONF_FILE
 echo "    option  tcpka"                                                                            >> $CONF_FILE
-echo "    option  httpchk"                                                                          >> $CONF_FILE
+#echo"    option  httpchk"                                                                          >> $CONF_FILE
 echo "    server  controller1 $CONTROLLER_NODE_01_INTERNAL_IP:9191 check inter 2000 rise 2 fall 5"  >> $CONF_FILE
 echo "    server  controller2 $CONTROLLER_NODE_02_INTERNAL_IP:9191 check inter 2000 rise 2 fall 5"  >> $CONF_FILE
 echo "    server  controller3 $CONTROLLER_NODE_03_INTERNAL_IP:9191 check inter 2000 rise 2 fall 5"  >> $CONF_FILE
