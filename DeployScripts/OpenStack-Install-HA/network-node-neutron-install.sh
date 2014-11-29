@@ -22,7 +22,7 @@ sysctl -p
 apt-get -y install neutron-common neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent
 
 #Modify conf files
-./network-node-neutron-modify-conf-files.sh
+$OPENSTACK_RELEASE/network-node-neutron-modify-conf-files.sh
 
 #Accept udp port 4789 when use vxlan
 if [ $TENANT_NETWORK_TYPES = 'vxlan' ]; then
