@@ -8,7 +8,7 @@ CONF_FILE=/etc/neutron/neutron.conf
 
 ./set-config.py $CONF_FILE database           connection                    mysql://$NEUTRON_USER:$NEUTRON_PASS@$DATABASE_IP/neutron
 ./set-config.py $CONF_FILE database           idle_timeout                  60
-./set-config.py $CONF_FILE DEFAULT            rpc_backend                   rabbit
+./set-config.py $CONF_FILE DEFAULT            rpc_backend                   neutron.openstack.common.rpc.impl_kombu
 ./set-config.py $CONF_FILE DEFAULT            rabbit_hosts                  $RABBIT_HOSTS
 ./set-config.py $CONF_FILE DEFAULT            rabbit_retry_interval         1
 ./set-config.py $CONF_FILE DEFAULT            rabbit_retry_backoff          2
@@ -16,8 +16,10 @@ CONF_FILE=/etc/neutron/neutron.conf
 ./set-config.py $CONF_FILE DEFAULT            rabbit_durable_queues         false
 ./set-config.py $CONF_FILE DEFAULT            rabbit_ha_queues              true
 ./set-config.py $CONF_FILE DEFAULT            auth_strategy                 keystone
-./set-config.py $CONF_FILE keystone_authtoken auth_uri                      http://$KEYSTONE_HOST_IP:5000/v2.0
-./set-config.py $CONF_FILE keystone_authtoken identity_uri                  http://$KEYSTONE_HOST_IP:35357
+./set-config.py $CONF_FILE keystone_authtoken auth_uri                      http://$KEYSTONE_EXT_HOST_IP:5000
+./set-config.py $CONF_FILE keystone_authtoken auth_host                     $KEYSTONE_HOST_IP
+./set-config.py $CONF_FILE keystone_authtoken auth_port                     35357
+./set-config.py $CONF_FILE keystone_authtoken auth_protocol                 http
 ./set-config.py $CONF_FILE keystone_authtoken admin_tenant_name             service
 ./set-config.py $CONF_FILE keystone_authtoken admin_user                    neutron
 ./set-config.py $CONF_FILE keystone_authtoken admin_password                $KEYSTONE_SERVICE_PASSWORD
@@ -30,11 +32,10 @@ SERVICE_TENANT_ID=$(keystone tenant-get service | grep ' id ' | awk '{print $4}'
 ./set-config.py $CONF_FILE DEFAULT            notify_nova_on_port_status_changes True
 ./set-config.py $CONF_FILE DEFAULT            notify_nova_on_port_data_changes   True
 ./set-config.py $CONF_FILE DEFAULT            nova_url                           http://$CONTROLLER_NODE_MANAGEMENT_IP:8774/v2
-./set-config.py $CONF_FILE DEFAULT            nova_admin_auth_url                http://$KEYSTONE_HOST_IP:35357/v2.0
-./set-config.py $CONF_FILE DEFAULT            nova_region_name                   regionOne
 ./set-config.py $CONF_FILE DEFAULT            nova_admin_username                nova
 ./set-config.py $CONF_FILE DEFAULT            nova_admin_tenant_id               $SERVICE_TENANT_ID
 ./set-config.py $CONF_FILE DEFAULT            nova_admin_password                $KEYSTONE_SERVICE_PASSWORD
+./set-config.py $CONF_FILE DEFAULT            nova_admin_auth_url                http://$KEYSTONE_HOST_IP:35357/v2.0
 
 ./set-config.py $CONF_FILE DEFAULT            core_plugin                        $CORE_PLUGIN
 ./set-config.py $CONF_FILE DEFAULT            service_plugins                    $SERVICE_PLUGINS
@@ -48,7 +49,7 @@ CONF_FILE=/etc/neutron/plugins/ml2/ml2_conf.ini
 if [ $TENANT_NETWORK_TYPES = 'gre' ]; then
     echo "TENANT_NETWORK_TYPES = gre"
 
-    ./set-config.py $CONF_FILE ml2             type_drivers          flat,gre
+    ./set-config.py $CONF_FILE ml2             type_drivers          gre
     ./set-config.py $CONF_FILE ml2             tenant_network_types  gre
     ./set-config.py $CONF_FILE ml2             mechanism_drivers     $MECHANISM_DRIVERS
     ./set-config.py $CONF_FILE ml2_type_gre    tunnel_id_ranges      1:10000
@@ -57,7 +58,7 @@ if [ $TENANT_NETWORK_TYPES = 'gre' ]; then
 elif [ $TENANT_NETWORK_TYPES = 'vxlan' ]; then
     echo "TENANT_NETWORK_TYPES = vxlan"
 
-    ./set-config.py $CONF_FILE ml2             type_drivers          flat,vxlan
+    ./set-config.py $CONF_FILE ml2             type_drivers          vxlan
     ./set-config.py $CONF_FILE ml2             tenant_network_types  vxlan
     ./set-config.py $CONF_FILE ml2             mechanism_drivers     $MECHANISM_DRIVERS
     ./set-config.py $CONF_FILE ml2_type_vxlan  vni_ranges            1000:5000
@@ -68,9 +69,8 @@ else
     echo "TENANT_NETWORK_TYPES = unknown type"
 fi
 
-./set-config.py $CONF_FILE securitygroup  enable_security_group  True
-./set-config.py $CONF_FILE securitygroup  enable_ipset           True
 ./set-config.py $CONF_FILE securitygroup  firewall_driver        neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
+./set-config.py $CONF_FILE securitygroup  enable_security_group  True
 
 #./set-config.py $CONF_FILE DEFAULT            my_ip                         $CONTROLLER_NODE_NOVA_MY_IP
 #./set-config.py $CONF_FILE DEFAULT            vncserver_listen              $CONTROLLER_NODE_VNCSERVER_LISTEN
