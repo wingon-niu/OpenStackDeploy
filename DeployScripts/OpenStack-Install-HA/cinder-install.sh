@@ -20,7 +20,7 @@ else
 fi
 
 #Modify conf files
-./cinder-modify-conf-files.sh
+$OPENSTACK_RELEASE/cinder-modify-conf-files.sh
 
 #Remove the SQLite database file
 rm -f /var/lib/cinder/cinder.sqlite
