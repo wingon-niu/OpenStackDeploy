@@ -16,19 +16,20 @@ CONF_FILE=/etc/nova/nova.conf
 ./set-config.py $CONF_FILE DEFAULT            rabbit_durable_queues         false
 ./set-config.py $CONF_FILE DEFAULT            rabbit_ha_queues              true
 ./set-config.py $CONF_FILE DEFAULT            auth_strategy                 keystone
-./set-config.py $CONF_FILE keystone_authtoken auth_uri                      http://$KEYSTONE_HOST_IP:5000/v2.0
-./set-config.py $CONF_FILE keystone_authtoken identity_uri                  http://$KEYSTONE_HOST_IP:35357
+./set-config.py $CONF_FILE keystone_authtoken auth_uri                      http://$KEYSTONE_EXT_HOST_IP:5000
+./set-config.py $CONF_FILE keystone_authtoken auth_host                     $KEYSTONE_HOST_IP
+./set-config.py $CONF_FILE keystone_authtoken auth_port                     35357
+./set-config.py $CONF_FILE keystone_authtoken auth_protocol                 http
 ./set-config.py $CONF_FILE keystone_authtoken admin_tenant_name             service
 ./set-config.py $CONF_FILE keystone_authtoken admin_user                    nova
 ./set-config.py $CONF_FILE keystone_authtoken admin_password                $KEYSTONE_SERVICE_PASSWORD
-./set-config.py $CONF_FILE glance             host                          $GLANCE_HOST_IP
+./set-config.py $CONF_FILE DEFAULT            glance_host                   $GLANCE_HOST_IP
 
 ./set-config.py $CONF_FILE DEFAULT            my_ip                         $COMPUTE_NODE_NOVA_MY_IP
 ./set-config.py $CONF_FILE DEFAULT            vnc_enabled                   True
 ./set-config.py $CONF_FILE DEFAULT            vncserver_listen              0.0.0.0
 ./set-config.py $CONF_FILE DEFAULT            vncserver_proxyclient_address $COMPUTE_NODE_VNCSERVER_PROXYCLIENT_ADDRESS
 ./set-config.py $CONF_FILE DEFAULT            novncproxy_base_url           http://$CONTROLLER_NODE_EXTERNAL_NET_IP:6080/vnc_auto.html
-./set-config.py $CONF_FILE DEFAULT            verbose                       True
 
 if [ $NETWORK_API_CLASS = 'nova-network' ]; then
     echo "NETWORK_API_CLASS = nova-network"
@@ -46,34 +47,28 @@ if [ $NETWORK_API_CLASS = 'nova-network' ]; then
     ./set-config.py $CONF_FILE DEFAULT public_interface       $PUBLIC_INTERFACE
 
     if [ $NETWORK_MANAGER = 'FlatDHCPManager' ]; then
-        echo "NETWORK_MANAGER = FlatDHCPManager"
-
         ./set-config.py $CONF_FILE DEFAULT flat_network_bridge    $FLAT_NETWORK_BRIDGE
         ./set-config.py $CONF_FILE DEFAULT flat_interface         $FLAT_INTERFACE
-
     elif [ $NETWORK_MANAGER = 'VlanManager' ]; then
-        echo "NETWORK_MANAGER = VlanManager"
-
         ./set-config.py $CONF_FILE DEFAULT vlan_interface         $VLAN_INTERFACE
-
     else
-        echo "NETWORK_MANAGER = unknown type"
+        echo ""
     fi
 elif [ $NETWORK_API_CLASS = 'neutron' ]; then
     echo "NETWORK_API_CLASS = neutron"
 
     ./set-config.py $CONF_FILE DEFAULT network_api_class                     nova.network.neutronv2.api.API
-    ./set-config.py $CONF_FILE DEFAULT security_group_api                    neutron
+    ./set-config.py $CONF_FILE DEFAULT neutron_url                           http://$CONTROLLER_NODE_MANAGEMENT_IP:9696
+    ./set-config.py $CONF_FILE DEFAULT neutron_auth_strategy                 keystone
+    ./set-config.py $CONF_FILE DEFAULT neutron_admin_tenant_name             service
+    ./set-config.py $CONF_FILE DEFAULT neutron_admin_username                neutron
+    ./set-config.py $CONF_FILE DEFAULT neutron_admin_password                $KEYSTONE_SERVICE_PASSWORD
+    ./set-config.py $CONF_FILE DEFAULT neutron_admin_auth_url                http://$KEYSTONE_HOST_IP:35357/v2.0
     ./set-config.py $CONF_FILE DEFAULT linuxnet_interface_driver             nova.network.linux_net.LinuxOVSInterfaceDriver
     ./set-config.py $CONF_FILE DEFAULT firewall_driver                       nova.virt.firewall.NoopFirewallDriver
-    ./set-config.py $CONF_FILE neutron url                                   http://$CONTROLLER_NODE_MANAGEMENT_IP:9696
-    ./set-config.py $CONF_FILE neutron auth_strategy                         keystone
-    ./set-config.py $CONF_FILE neutron admin_auth_url                        http://$KEYSTONE_HOST_IP:35357/v2.0
-    ./set-config.py $CONF_FILE neutron admin_tenant_name                     service
-    ./set-config.py $CONF_FILE neutron admin_username                        neutron
-    ./set-config.py $CONF_FILE neutron admin_password                        $KEYSTONE_SERVICE_PASSWORD
-#   ./set-config.py $CONF_FILE DEFAULT service_neutron_metadata_proxy        true
-#   ./set-config.py $CONF_FILE DEFAULT neutron_metadata_proxy_shared_secret  $METADATA_PROXY_SHARED_SECRET
+    ./set-config.py $CONF_FILE DEFAULT security_group_api                    neutron
+   #./set-config.py $CONF_FILE DEFAULT service_neutron_metadata_proxy        true
+   #./set-config.py $CONF_FILE DEFAULT neutron_metadata_proxy_shared_secret  $METADATA_PROXY_SHARED_SECRET
 
     #
 else
@@ -82,20 +77,20 @@ fi
 
 if [ "$NOVA_STORAGE" = "ceph" ]; then
     echo "NOVA_STORAGE = ceph"
-    ./set-config.py  $CONF_FILE  libvirt  images_type           rbd
-    ./set-config.py  $CONF_FILE  libvirt  images_rbd_pool       vms
-    ./set-config.py  $CONF_FILE  libvirt  images_rbd_ceph_conf  /etc/ceph/ceph.conf
-    ./set-config.py  $CONF_FILE  libvirt  rbd_user              cinder
-    ./set-config.py  $CONF_FILE  libvirt  rbd_secret_uuid       $(cat ./uuid.txt | awk '{print $1}')
-    ./set-config.py  $CONF_FILE  libvirt  inject_password       false
-    ./set-config.py  $CONF_FILE  libvirt  inject_key            false
-    ./set-config.py  $CONF_FILE  libvirt  inject_partition      -2
-    ./set-config.py  $CONF_FILE  libvirt  live_migration_flag   "VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST"
+    ./set-config.py $CONF_FILE DEFAULT libvirt_images_type           rbd
+    ./set-config.py $CONF_FILE DEFAULT libvirt_images_rbd_pool       vms
+    ./set-config.py $CONF_FILE DEFAULT libvirt_images_rbd_ceph_conf  /etc/ceph/ceph.conf
+    ./set-config.py $CONF_FILE DEFAULT rbd_user                      cinder
+    ./set-config.py $CONF_FILE DEFAULT rbd_secret_uuid               $(cat ./uuid.txt | awk '{print $1}')
+    ./set-config.py $CONF_FILE DEFAULT libvirt_inject_password       false
+    ./set-config.py $CONF_FILE DEFAULT libvirt_inject_key            false
+    ./set-config.py $CONF_FILE DEFAULT libvirt_inject_partition      -2
+    ./set-config.py $CONF_FILE DEFAULT libvirt_live_migration_flag   "VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST"
     virsh secret-define --file ./secret.xml
     virsh secret-set-value --secret $(cat ./uuid.txt | awk '{print $1}') --base64 $(cat ./client.cinder.key)
 else
     echo "NOVA_STORAGE = local_disk"
-#   ./del-config.py  $CONF_FILE  libvirt  images_type
+    ./del-config.py $CONF_FILE DEFAULT libvirt_images_type
 fi
 
 #Modify the /etc/nova/nova-compute.conf

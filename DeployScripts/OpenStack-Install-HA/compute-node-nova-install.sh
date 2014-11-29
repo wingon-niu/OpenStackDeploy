@@ -32,7 +32,7 @@ fi
 #---chmod +x /etc/kernel/postinst.d/statoverride
 
 #Modify conf files
-./compute-node-nova-modify-conf-files.sh
+$OPENSTACK_RELEASE/compute-node-nova-modify-conf-files.sh
 
 #Remove the SQLite database file
 rm -f /var/lib/nova/nova.sqlite
