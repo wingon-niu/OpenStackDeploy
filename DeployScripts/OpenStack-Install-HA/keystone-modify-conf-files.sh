@@ -14,6 +14,4 @@ CONF_FILE=/etc/keystone/keystone.conf
 ./set-config.py $CONF_FILE token    driver            keystone.token.persistence.backends.sql.Token
 ./set-config.py $CONF_FILE cache    memcache_servers  $CONTROLLER_NODE_MANAGEMENT_IP:11211
 
-#./set-config.py $CONF_FILE signing  token_format UUID
-
 exit 0

@@ -81,6 +81,7 @@ screen   -S niu -U -X screen   -U -t $IP $CMD_PATH/run-on-node.expect $IP contro
 $CMD_PATH/check-screen-ended.sh
 
 #Because now will use mysql via VIP, so frontend nodes must be running
+echo "Checking front nodes running..."
 $CMD_PATH/check-servers-running.sh $CONF_DEPLOY_DIR/Front-Nodes-IPs.txt 30
 
 #Process controller-node-install-part-3 on all controller nodes

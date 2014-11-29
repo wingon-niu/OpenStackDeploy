@@ -9,7 +9,7 @@ date
 apt-get install -y keystone python-keystoneclient
 
 #Modify conf files
-./keystone-modify-conf-files.sh
+$OPENSTACK_RELEASE/keystone-modify-conf-files.sh
 
 #Remove the SQLite database file
 rm -f /var/lib/keystone/keystone.db
