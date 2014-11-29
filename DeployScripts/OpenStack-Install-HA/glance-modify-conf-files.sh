@@ -50,6 +50,7 @@ conf_file_03=/etc/glance/glance-api.conf
 ./backup-file.sh $conf_file_03
 
 ./set-config.py $conf_file_03 database            connection               mysql://$GLANCE_USER:$GLANCE_PASS@$DATABASE_IP/glance
+./set-config.py $conf_file_03 database            idle_timeout             60
 ./set-config.py $conf_file_03 keystone_authtoken  auth_uri                 http://$KEYSTONE_HOST_IP:5000/v2.0
 ./set-config.py $conf_file_03 keystone_authtoken  identity_uri             http://$KEYSTONE_HOST_IP:35357
 ./set-config.py $conf_file_03 keystone_authtoken  admin_tenant_name        service
@@ -97,6 +98,7 @@ conf_file_04=/etc/glance/glance-registry.conf
 ./backup-file.sh $conf_file_04
 
 ./set-config.py $conf_file_04 database            connection               mysql://$GLANCE_USER:$GLANCE_PASS@$DATABASE_IP/glance
+./set-config.py $conf_file_04 database            idle_timeout             60
 ./set-config.py $conf_file_04 keystone_authtoken  auth_uri                 http://$KEYSTONE_HOST_IP:5000/v2.0
 ./set-config.py $conf_file_04 keystone_authtoken  identity_uri             http://$KEYSTONE_HOST_IP:35357
 ./set-config.py $conf_file_04 keystone_authtoken  admin_tenant_name        service

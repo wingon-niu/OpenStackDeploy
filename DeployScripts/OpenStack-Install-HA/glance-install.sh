@@ -16,7 +16,7 @@ else
 fi
 
 #Modify conf files
-./glance-modify-conf-files.sh
+$OPENSTACK_RELEASE/glance-modify-conf-files.sh
 
 #Remove the SQLite database file
 rm -f /var/lib/glance/glance.sqlite
