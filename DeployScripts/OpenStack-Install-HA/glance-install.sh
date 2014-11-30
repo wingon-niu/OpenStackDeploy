@@ -30,6 +30,15 @@ if [ $FIRST_GLANCE_NODE = 'Yes' ]; then
     #Synchronize the glance database
     glance-manage db_sync
 
+    if [ "$OPENSTACK_RELEASE" = "./icehouse" ]; then
+        echo "Fixing above error..."
+        sleep 2
+        mysql -uroot -p$MYSQL_ROOT_PASSWORD -e "alter table migrate_version convert to character set utf8 collate utf8_unicode_ci;flush privileges;" glance
+        echo "Fixed OK."
+        sleep 2
+        glance-manage db_sync
+    fi
+
     #Make creds and source it
     #./make-creds.sh
     #source ./openrc
