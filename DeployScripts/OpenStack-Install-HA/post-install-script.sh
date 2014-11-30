@@ -14,7 +14,7 @@ if [ $NETWORK_API_CLASS = 'nova-network' ]; then
     if [ $NETWORK_MANAGER = 'FlatDHCPManager' ]; then
         echo "NETWORK_MANAGER = FlatDHCPManager"
 
-        nova network-create fixed-network-1 --bridge $FLAT_NETWORK_BRIDGE --multi-host T --fixed-range-v4 $FIXED_RANGE_V4
+        nova network-create fixed-network-1 --bridge $FLAT_NETWORK_BRIDGE --multi-host T --fixed-range-v4 $FIXED_RANGE_V4 --dns1 $MY_DNS1 --dns2 $MY_DNS2
         ./floating-ip-bulk-create.sh
 
         #
@@ -22,7 +22,7 @@ if [ $NETWORK_API_CLASS = 'nova-network' ]; then
         echo "NETWORK_MANAGER = VlanManager"
 
         MY_PROJECT_ID=$(keystone tenant-list | grep ' admin ' | grep -v grep | awk '{print $2}')
-        nova-manage network create --label private-net-1 --fixed_range_v4 $FIXED_RANGE_V4 --num_networks $NUM_NETWORKS --network_size $NETWORK_SIZE --vlan $VLAN_START --bridge br$VLAN_START --bridge_interface $VLAN_INTERFACE --multi_host T --project_id $MY_PROJECT_ID
+        nova-manage network create --label private-net-1 --fixed_range_v4 $FIXED_RANGE_V4 --num_networks $NUM_NETWORKS --network_size $NETWORK_SIZE --vlan $VLAN_START --bridge br$VLAN_START --bridge_interface $VLAN_INTERFACE --multi_host T --project_id $MY_PROJECT_ID --dns1 $MY_DNS1 --dns2 $MY_DNS2
         ./floating-ip-bulk-create.sh
 
         #
