@@ -6,7 +6,7 @@ source ./env.sh
 CONF_FILE=/etc/neutron/neutron.conf
 ./backup-file.sh $CONF_FILE
 
-./del-config.py $CONF_FILE database           connection
+#./del-config.py $CONF_FILE database          connection
 ./set-config.py $CONF_FILE DEFAULT            rpc_backend                   rabbit
 ./set-config.py $CONF_FILE DEFAULT            rabbit_hosts                  $RABBIT_HOSTS
 ./set-config.py $CONF_FILE DEFAULT            rabbit_retry_interval         1
