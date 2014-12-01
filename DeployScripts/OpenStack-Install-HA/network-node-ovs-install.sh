@@ -10,6 +10,7 @@ ovs-vsctl add-port br-ex $EXTERNAL_NETWORK_INTERFACE_NAME
 
 ifup   $EXTERNAL_NETWORK_INTERFACE_NAME
 ifconfig br-ex up
+ifup br-ex
 
 #
 
