@@ -116,7 +116,7 @@ echo $STR_PING_ALL_SERVERS
 $CMD_PATH/check-servers-running.sh $CONF_DEPLOY_DIR/Servers-IPs.txt 10
 for MY_IP in $(cat $CONF_DEPLOY_DIR/Servers-IPs.txt); do
     echo "Connecting to $MY_IP"
-    ssh root@$MY_IP "cd /root;rm -rf ./OpenStack-Install-HA;rm -rf ./Ceph-Install;cd /etc/apt/sources.list.d;rm -f ./openstack.list;rm -f ./ceph.list;"
+    ssh root@$MY_IP "rm -rf /data/osd;cd /root;rm -rf ./OpenStack-Install-HA;rm -rf ./Ceph-Install;cd /etc/apt/sources.list.d;rm -f ./openstack.list;rm -f ./ceph.list;"
 done
 
 echo "Undeploy completed."
