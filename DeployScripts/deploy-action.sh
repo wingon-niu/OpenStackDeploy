@@ -11,6 +11,19 @@ else
     source ./locale_en.txt
 fi
 
+#Check mysql galera and cirros image
+if [ ! -d $CMD_PATH/mysql_galera                                           -o \
+     ! -f $CMD_PATH/mysql_galera/mysql-server-wsrep-5.5.28-23.7-amd64.deb  -o \
+     ! -f $CMD_PATH/mysql_galera/galera-23.2.4-amd64.deb                   -o \
+     ! -d $CMD_PATH/images                                                 -o \
+     ! -f $CMD_PATH/images/cirros-0.3.2-x86_64-disk.img                       \
+   ]; then
+
+    echo "Error: Mysql Galera or cirros image files not exist! Please run ./download-pkg.sh first or put these files to right location manually."
+    exit 1
+
+fi
+
 ##########################################################################################
 PREFIX_SERVERS=$($CMD_PATH/get-max-prefix.sh          $DST_PATH Servers.txt)
 PREFIX_SERVER_INFO=$($CMD_PATH/get-max-prefix.sh      $DST_PATH Server-Info.txt)
