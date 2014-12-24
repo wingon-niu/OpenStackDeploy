@@ -1,0 +1,18 @@
+#!/usr/bin/expect
+
+#timeout = 2 days
+
+set timeout 172800
+
+set node_ip  [lindex $argv 0]
+set log_name [lindex $argv 1]
+
+spawn ssh root@$node_ip
+
+#expect "s password:"
+#send "111111\r"
+
+expect ":~#"
+send "shutdown -h 0\r"
+
+expect eof
